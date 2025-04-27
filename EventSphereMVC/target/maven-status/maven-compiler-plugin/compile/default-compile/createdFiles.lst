@@ -1,0 +1,3 @@
+org\locations\eventspheremvc\controllers\eventController.class
+org\locations\eventspheremvc\controllers\userController.class
+org\locations\eventspheremvc\EventSphereMvcApplication.class

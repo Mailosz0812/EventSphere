@@ -1,0 +1,33 @@
+package org.locations.eventsphere.Entities;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Data
+public class Event {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_seq")
+    @SequenceGenerator(name = "event_seq", sequenceName = "EVENT_SEQ", allocationSize = 1)
+    private Long EVENTID;
+    @Column(unique = true,nullable = false)
+    private String NAME;
+    private LocalDate EVENTDATE;
+    private int TICKETCOUNT;
+    private String LOCATION;
+    private String DESCRIPTION;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CATEGORYID", referencedColumnName = "CATEGORYID")
+    private EventCategory EVENTCATEGORY;
+    @ManyToMany
+    @JoinTable(
+            name = "EVENTORGANIZE",
+            joinColumns = @JoinColumn(name = "EVENTID"),
+            inverseJoinColumns = @JoinColumn(name = "USERID")
+    )
+    private List<LoggedUser> organizers;
+}
