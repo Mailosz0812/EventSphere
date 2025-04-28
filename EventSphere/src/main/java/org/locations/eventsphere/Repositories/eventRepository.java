@@ -1,7 +1,6 @@
 package org.locations.eventsphere.Repositories;
 
 import org.locations.eventsphere.Entities.Event;
-import org.locations.eventsphere.Entities.Location;
 import org.locations.eventsphere.Entities.LoggedUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

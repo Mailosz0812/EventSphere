@@ -1,17 +1,11 @@
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Configs\beanConfig.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Controllers\eventController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Controllers\userController.java
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\DTOs\commentDTO.java
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\DTOs\eventDTO.java
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\DTOs\userDTO.java
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\DTOs\userRegisterDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Comment.java
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\eRole.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\ESubscribeID.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Event.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\EventCategory.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\EventSubscribe.java
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Location.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\LoggedUser.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Payment.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Role.java

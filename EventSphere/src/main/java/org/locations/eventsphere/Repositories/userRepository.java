@@ -22,5 +22,5 @@ public interface userRepository extends JpaRepository<LoggedUser,Long> {
 
     Optional<LoggedUser> findLoggedUserByMAIL(String MAIL);
     Optional<LoggedUser> findLoggedUserByUSERNAMEAndROLE(String username,Role role);
-    Optional<LoggedUser> findLoggedUserByUSERNAMEOrMAIL(String username, String mail);
+    List<LoggedUser> findLoggedUserByUSERNAMEOrMAIL(String username, String mail);
 }

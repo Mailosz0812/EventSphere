@@ -34,7 +34,7 @@ public class userService {
         this.userRegisterMapper = userRegisterMapper;
     }
     public boolean createUser(userRegisterDTO userDTO){
-        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUSERNAMEOrMAIL(userDTO.getUSERNAME(),userDTO.getMAIL());
+        List<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUSERNAMEOrMAIL(userDTO.getUSERNAME(),userDTO.getMAIL());
         if(optionalLoggedUser.isEmpty()){
             LoggedUser newUser = userRegisterMapper.mapFrom(userDTO);
             Role role = checkRole(userDTO.getROLE());
@@ -84,5 +84,13 @@ public class userService {
         updateUser.setSURNAME(userDTO.getSURNAME());
         updateUser.setDESCRIPTION(userDTO.getDESCRIPTION());
         return userMapper.mapTo(userRepo.save(updateUser));
+    }
+
+    public userRegisterDTO getUserByMail(String mail){
+        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMAIL(mail);
+        if(optionalLoggedUser.isEmpty()){
+            throw new NoSuchUserException("No such user with mail: "+mail);
+        }
+        return userRegisterMapper.mapTo(optionalLoggedUser.get());
     }
 }

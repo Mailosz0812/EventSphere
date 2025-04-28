@@ -29,4 +29,9 @@ public class userController {
         return userService.updateUser(userDTO);
     }
 
+    @GetMapping("/getUser")
+    public userRegisterDTO getUser(@RequestParam("mail") String mail){
+        return userService.getUserByMail(mail);
+    }
+
 }

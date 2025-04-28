@@ -10,12 +10,12 @@ import lombok.Data;
 public class EventSubscribe {
 
     @Id
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "EVENTID", referencedColumnName = "EVENTID")
     private Event event;
 
     @Id
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "USERID", referencedColumnName = "USERID")
     private LoggedUser loggedUser;
 }

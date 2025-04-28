@@ -1,5 +1,6 @@
 package org.locations.eventsphere.Services;
 import DTOs.eventDTO;
+import DTOs.userRegisterDTO;
 import org.locations.eventsphere.Entities.Event;
 import org.locations.eventsphere.Entities.EventCategory;
 import org.locations.eventsphere.Entities.LoggedUser;
@@ -87,4 +88,5 @@ public class eventService {
         }
         return eventRepo.findEventsByOrganizer(organizerOptional.get());
     }
+
 }
