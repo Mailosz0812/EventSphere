@@ -42,4 +42,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleNoSuchRoleException(NoSuchRoleException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+    @ExceptionHandler(NoSuchUserException.class)
+    public ResponseEntity handleNoSuchUserException(NoSuchUserException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }

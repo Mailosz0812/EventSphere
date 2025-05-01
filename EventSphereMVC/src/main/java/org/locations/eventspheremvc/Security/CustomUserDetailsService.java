@@ -9,22 +9,30 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.Collection;
 import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private userRequestService userRequestService;
+    private userRequestService userReqService;
 
-    public CustomUserDetailsService(userRequestService userRequestService) {
-        this.userRequestService = userRequestService;
+    public CustomUserDetailsService(userRequestService userReqService) {
+        this.userReqService = userReqService;
     }
+
     @Override
-    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-        userRegisterDTO userRegisterDTO = userRequestService.getUserByMail(mail);
-        return new User(userRegisterDTO.getMAIL(),userRegisterDTO.getPASSWORD(), Collections.singletonList(mapRoleToAuthorities(userRegisterDTO.getROLE())));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        try{
+        userRegisterDTO userDTO = userReqService.getUserByMail(username);
+        UserDetails user = new User(userDTO.getMAIL(),userDTO.getPASSWORD(),extractRole(userDTO));
+        return user;
+        }catch (HttpClientErrorException e){
+            throw new UsernameNotFoundException("Invalid credentials");
+        }
     }
-
-    private GrantedAuthority mapRoleToAuthorities(String role){
-        return new SimpleGrantedAuthority("ROLE_"+role);
+    private Collection<GrantedAuthority> extractRole(userRegisterDTO userDTO){
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+userDTO.getROLE()));
     }
 }

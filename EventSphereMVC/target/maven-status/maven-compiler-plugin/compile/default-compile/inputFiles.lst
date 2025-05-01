@@ -1,3 +1,10 @@
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\eventController.java
-C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\userController.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\config\BeansConfig.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\AuthController.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\EventController.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\UserController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\EventSphereMvcApplication.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Security\AuthenticationService.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Security\CustomUserDetailsService.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Security\JWTAuthFilter.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Security\SecurityConfig.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\userRequestService.java

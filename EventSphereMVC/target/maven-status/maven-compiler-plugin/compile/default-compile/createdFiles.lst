@@ -1,3 +1,10 @@
-org\locations\eventspheremvc\controllers\eventController.class
-org\locations\eventspheremvc\controllers\userController.class
+org\locations\eventspheremvc\controllers\UserController.class
+org\locations\eventspheremvc\Security\CustomUserDetailsService.class
+org\locations\eventspheremvc\controllers\AuthController.class
+org\locations\eventspheremvc\controllers\EventController.class
+org\locations\eventspheremvc\Security\JWTAuthFilter.class
+org\locations\eventspheremvc\Security\AuthenticationService.class
+org\locations\eventspheremvc\config\BeansConfig.class
+org\locations\eventspheremvc\services\userRequestService.class
+org\locations\eventspheremvc\Security\SecurityConfig.class
 org\locations\eventspheremvc\EventSphereMvcApplication.class

@@ -5,6 +5,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,12 +17,14 @@ public class userRequestService {
     public userRequestService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
     public userRegisterDTO getUserByMail(String mail){
         String url = userApiURL+"/getUser?mail={mail}";
         return restTemplate.getForObject(url, userRegisterDTO.class,mail);
     }
     public String createUser(userRegisterDTO userRegisterDTO){
         userRegisterDTO.setROLE("USER");
+        userRegisterDTO.setPASSWORD(userRegisterDTO.getPASSWORD());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<userRegisterDTO> request = new HttpEntity<>(userRegisterDTO,headers);

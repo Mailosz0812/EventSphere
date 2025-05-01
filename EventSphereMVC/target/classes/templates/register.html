@@ -12,12 +12,10 @@
     <div class="col-lg-6 mx-auto rounded border p-4">
       <h2 class="text-center mb-4">Register</h2>
       <form action="#" method="post" th:object="${userRegister}" th:action="@{/register}">
-        <input type="hidden" th:name="${_csrf.parameterName}"
-               th:value="${_csrf.token}"/>
 
         <div class="mb-3">
-          <label for="InputEmail1" class="form-label">Email address</label>
-          <input type="email" th:field="*{MAIL}" class="form-control" id="InputEmail1">
+          <label for="InputEmail" class="form-label">Email address</label>
+          <input type="email" th:field="*{MAIL}" class="form-control" id="InputEmail">
           <p th:if="${errors != null and errors.containsKey('MAIL')}" th:text="${errors['MAIL']}" class="text-danger"></p>
         </div>
 

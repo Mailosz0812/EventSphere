@@ -45,7 +45,9 @@ public class userRegisterMapper implements Mapper<LoggedUser, userRegisterDTO> {
     }
     @Override
     public userRegisterDTO mapTo(LoggedUser loggedUser) {
-        return mapper.map(loggedUser, userRegisterDTO.class);
+        userRegisterDTO user =  mapper.map(loggedUser, userRegisterDTO.class);
+        user.setROLE(loggedUser.getROLE().getNAME());
+        return user;
     }
     @Override
     public LoggedUser mapFrom(userRegisterDTO userRegisterDTO) {

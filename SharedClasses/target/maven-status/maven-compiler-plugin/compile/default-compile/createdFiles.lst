@@ -1,4 +1,6 @@
 DTOs\commentDTO.class
+DTOs\authDTO.class
 DTOs\eventDTO.class
 DTOs\userDTO.class
 DTOs\userRegisterDTO.class
+DTOs\authResponse.class

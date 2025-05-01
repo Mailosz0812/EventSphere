@@ -41,6 +41,14 @@
             </a>
         </li>
     </ul>
+
+    <ul class = "nav nav-pills flex-column mt-auto fs-6">
+        <hr class="mt-auto">
+        <form th:action="@{/logout}" method="post">
+            <i class="bi bi-box-arrow-left fs-5 me-2"></i>
+            <button type="submit" class="btn btn-dark mb-1">Logout</button>
+        </form>
+    </ul>
 </div>
 </body>
 </html>
