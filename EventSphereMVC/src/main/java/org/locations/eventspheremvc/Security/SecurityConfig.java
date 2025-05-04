@@ -20,12 +20,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/sys").hasRole("SYS_ADMIN")
+                        .requestMatchers("/admin","/admin/**").hasAnyRole("ADMIN","SYS_ADMIN")
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/")
                         .permitAll()
                 )
                 .logout(logout -> logout

@@ -3,10 +3,11 @@ package DTOs;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class userRegisterDTO {
     @NotEmpty(message = "name must be provided")
     private String NAME;
@@ -15,6 +16,7 @@ public class userRegisterDTO {
     @Email(message = "Invalid Email format")
     @NotEmpty(message = "Email must be provided")
     private String MAIL;
+    @NotEmpty(message = "Password must be provided")
     @Size(min = 8, message = "Minimum password length is 8 characters")
     private String PASSWORD;
     @NotEmpty(message = "Username must be provided")

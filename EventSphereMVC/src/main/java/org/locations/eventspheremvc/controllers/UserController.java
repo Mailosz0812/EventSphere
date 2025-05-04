@@ -3,11 +3,10 @@ package org.locations.eventspheremvc.controllers;
 import DTOs.userRegisterDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.locations.eventspheremvc.services.userRequestService;
+import org.locations.eventspheremvc.services.accountsRequestService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +17,10 @@ import java.util.Map;
 
 @Controller
 public class UserController {
-    private userRequestService userRequestService;
+    private accountsRequestService userRequestService;
     private PasswordEncoder passwordEncoder;
 
-    public UserController(userRequestService userRequestService, PasswordEncoder passwordEncoder) {
+    public UserController(accountsRequestService userRequestService, PasswordEncoder passwordEncoder) {
         this.userRequestService = userRequestService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -35,43 +34,46 @@ public class UserController {
     @PostMapping("/register")
     public String createUser(@ModelAttribute  userRegisterDTO userRegister,Model model){
         try {
-            userRegister.setPASSWORD(passwordEncoder.encode(userRegister.getPASSWORD()));
-                model.addAttribute("Response", userRequestService.createUser(userRegister));
-                return "redirect:/login";
-
-        }catch(HttpClientErrorException e){
-            Map<String, String> errors = new HashMap<>();
-
-            String s = e.getResponseBodyAsString();
-            System.out.println(s);
-            model.addAttribute("userRegister",new userRegisterDTO());
-
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode root = objectMapper.readTree(s);
-
-                if (root.isObject() && root.has("MAIL") || root.has("NAME") || root.has("SURNAME") || root.has("USERNAME") || root.has("PASSWORD")) {
-                    root.fields().forEachRemaining(field -> {
-                        String fieldName = field.getKey();
-                        System.out.println(fieldName);
-                        String errorMessage = field.getValue().asText();
-                        System.out.println(errorMessage);
-                        errors.put(fieldName,errorMessage);
-                    });
-                    model.addAttribute("errors",errors);
-                }
-            } catch (Exception jsonException) {
-                model.addAttribute("Response", s);
+            if(userRegister.getPASSWORD().length() > 7) {
+                userRegister.setPASSWORD(passwordEncoder.encode(userRegister.getPASSWORD()));
             }
+                model.addAttribute("Response", userRequestService.createUser(userRegister,"USER"));
+                return "redirect:/login";
+        }catch(HttpClientErrorException e){
+            errorMessage(model, e,"userRegister");
             return "register";
         }
     }
+
+    static void errorMessage(Model model, HttpClientErrorException e, String attribName) {
+        Map<String, String> errors = new HashMap<>();
+        String s = e.getResponseBodyAsString();
+        System.out.println(s);
+        model.addAttribute(attribName,new userRegisterDTO());
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(s);
+            if (root.isObject() && root.has("MAIL") || root.has("NAME") || root.has("SURNAME") || root.has("USERNAME") || root.has("PASSWORD")) {
+                root.fields().forEachRemaining(field -> {
+                    String fieldName = field.getKey();
+                    System.out.println(fieldName);
+                    String errorMessage = field.getValue().asText();
+                    System.out.println(errorMessage);
+                    errors.put(fieldName,errorMessage);
+                });
+                model.addAttribute("errors",errors);
+            }
+        } catch (Exception jsonException) {
+            model.addAttribute("Response", s);
+        }
+    }
+
     @GetMapping("/")
-    public String guestView(Model model){
+    public String guestView(){
         return "index";
     }
     @GetMapping("/home")
-    public String homeView(){
-        return "home";
+    public String userView(){
+        return "userView";
     }
 }

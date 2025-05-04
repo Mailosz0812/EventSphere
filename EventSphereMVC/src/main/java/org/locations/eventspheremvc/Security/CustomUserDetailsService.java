@@ -1,7 +1,7 @@
 package org.locations.eventspheremvc.Security;
 
 import DTOs.userRegisterDTO;
-import org.locations.eventspheremvc.services.userRequestService;
+import org.locations.eventspheremvc.services.accountsRequestService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,9 +16,9 @@ import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private userRequestService userReqService;
+    private accountsRequestService userReqService;
 
-    public CustomUserDetailsService(userRequestService userReqService) {
+    public CustomUserDetailsService(accountsRequestService userReqService) {
         this.userReqService = userReqService;
     }
 
