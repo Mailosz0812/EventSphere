@@ -33,5 +33,14 @@ public class userController {
     public userRegisterDTO getUser(@RequestParam("mail") String mail){
         return userService.getUserByMail(mail);
     }
+    @PutMapping("/registry")
+    public userRegisterDTO updateRegisterUser(@RequestBody userRegisterDTO user){
+        System.out.println(user.getMAIL());
+        System.out.println(user.getROLE());
+        System.out.println(user.getPASSWORD());
+        System.out.println(user.getNAME());
+        System.out.println(user.getSURNAME());
+        return userService.updateUserRegister(user);
+    }
 
 }

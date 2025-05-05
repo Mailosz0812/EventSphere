@@ -23,6 +23,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/sys").hasRole("SYS_ADMIN")
                         .requestMatchers("/admin","/admin/**").hasAnyRole("ADMIN","SYS_ADMIN")
                         .requestMatchers("/register").permitAll()
+                        .requestMatchers("/reset","/reset/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form

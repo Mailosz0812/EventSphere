@@ -10,8 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "LOGGEDUSER")
-@Data
 @NoArgsConstructor
+@Data
 public class LoggedUser {
 
     @Id
@@ -32,6 +32,7 @@ public class LoggedUser {
     private String PASSWORD;
     private String USERNAME;
     private String DESCRIPTION;
+    private boolean NON_LOCKED;
 
     public LoggedUser(String NAME, String SURNAME, String MAIL,String PASSWORD, String USERNAME) {
         this.NAME = NAME;

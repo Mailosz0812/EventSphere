@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Data
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class userRegisterDTO {
     @NotEmpty(message = "name must be provided")
     private String NAME;
@@ -22,4 +24,5 @@ public class userRegisterDTO {
     @NotEmpty(message = "Username must be provided")
     private String USERNAME;
     private String ROLE;
+    private boolean NON_LOCKED;
 }

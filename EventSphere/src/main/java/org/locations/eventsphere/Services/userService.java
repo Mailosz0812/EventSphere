@@ -85,6 +85,20 @@ public class userService {
         updateUser.setDESCRIPTION(userDTO.getDESCRIPTION());
         return userMapper.mapTo(userRepo.save(updateUser));
     }
+    public userRegisterDTO updateUserRegister(userRegisterDTO userDTO){
+        Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMAIL(userDTO.getMAIL());
+        if(loggedUserOptional.isEmpty()){
+            throw new NoSuchUserException("No such user with mail: "+userDTO.getMAIL());
+        }
+        LoggedUser updateUser = loggedUserOptional.get();
+        updateUser.setNAME(userDTO.getNAME());
+        updateUser.setSURNAME(userDTO.getSURNAME());
+        updateUser.setPASSWORD(userDTO.getPASSWORD());
+        updateUser.setMAIL(userDTO.getMAIL());
+        updateUser.setUSERNAME(userDTO.getUSERNAME());
+        updateUser.setNON_LOCKED(userDTO.isNON_LOCKED());
+        return userRegisterMapper.mapTo(userRepo.save(updateUser));
+    }
 
     public userRegisterDTO getUserByMail(String mail){
         Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMAIL(mail);

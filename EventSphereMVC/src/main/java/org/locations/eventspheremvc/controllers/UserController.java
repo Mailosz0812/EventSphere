@@ -37,19 +37,22 @@ public class UserController {
             if(userRegister.getPASSWORD().length() > 7) {
                 userRegister.setPASSWORD(passwordEncoder.encode(userRegister.getPASSWORD()));
             }
+            else{
+                userRegister.setPASSWORD(" ");
+            }
                 model.addAttribute("Response", userRequestService.createUser(userRegister,"USER"));
                 return "redirect:/login";
         }catch(HttpClientErrorException e){
-            errorMessage(model, e,"userRegister");
+            errorMessage(model, e,userRegister);
             return "register";
         }
     }
 
-    static void errorMessage(Model model, HttpClientErrorException e, String attribName) {
+    static void errorMessage(Model model, HttpClientErrorException e, userRegisterDTO user) {
         Map<String, String> errors = new HashMap<>();
         String s = e.getResponseBodyAsString();
         System.out.println(s);
-        model.addAttribute(attribName,new userRegisterDTO());
+        model.addAttribute("userRegister",user);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = objectMapper.readTree(s);

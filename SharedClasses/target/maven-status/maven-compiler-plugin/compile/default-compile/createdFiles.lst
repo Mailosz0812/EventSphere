@@ -3,3 +3,4 @@ DTOs\eventDTO.class
 DTOs\preCreatedUserDTO.class
 DTOs\userDTO.class
 DTOs\userRegisterDTO.class
+DTOs\PasswordTokenDTO.class

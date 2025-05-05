@@ -1,8 +1,13 @@
 package org.locations.eventspheremvc.controllers;
 
+import DTOs.PasswordTokenDTO;
 import DTOs.preCreatedUserDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.Email;
+import org.locations.eventspheremvc.services.AdminRequestService;
+import org.locations.eventspheremvc.services.EmailService;
+import org.locations.eventspheremvc.services.PasswordResetReqService;
 import org.locations.eventspheremvc.services.accountsRequestService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,18 +18,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private final accountsRequestService accountService;
-    private PasswordEncoder encoder;
+    private final AdminRequestService adminService;
+    private final PasswordResetReqService passResetService;
+    private final PasswordEncoder encoder;
+    private final EmailService emailService;
 
-    public AdminController(accountsRequestService accountService, PasswordEncoder encoder) {
-        this.accountService = accountService;
+    public AdminController(AdminRequestService adminService, PasswordResetReqService passResetService, PasswordEncoder encoder, EmailService emailService) {
+        this.adminService = adminService;
+        this.passResetService = passResetService;
         this.encoder = encoder;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -41,10 +52,12 @@ public class AdminController {
     public String registerAdmin(@ModelAttribute preCreatedUserDTO admin, Model model){
         try {
             String pass = encoder.encode("admin1");
-            accountService.adminCreateUser(admin,"ADMIN",pass);
+            adminService.adminCreateUser(admin,"ADMIN",pass);
+            String token = generateToken(admin);
+            emailService.sendPasswordLink(admin.getMail(),token);
             model.addAttribute("admin",new preCreatedUserDTO());
             model.addAttribute("response","Administrator created successfully");
-            return"adminRegister";
+            return "adminRegister";
         }catch(HttpClientErrorException e){
             errorMessage(model,e.getResponseBodyAsString(),"admin",admin);
             return "adminRegister";
@@ -63,7 +76,9 @@ public class AdminController {
     public String registerOrganizer(@ModelAttribute preCreatedUserDTO organizer, Model model){
         try {
             String pass = encoder.encode("organizer1");
-            accountService.adminCreateUser(organizer, "ORGANIZER",pass);
+            adminService.adminCreateUser(organizer, "ORGANIZER",pass);
+            String token = generateToken(organizer);
+            emailService.sendPasswordLink(organizer.getMail(),token);
             model.addAttribute("organizer",new preCreatedUserDTO());
             model.addAttribute("response", "Organizer added successfully");
             return "organizerRegister";
@@ -78,21 +93,30 @@ public class AdminController {
         model.addAttribute("user",new preCreatedUserDTO());
         return "userRegister";
     }
-
     @PostMapping("/register/user")
     public String registerUser(@ModelAttribute preCreatedUserDTO userDTO,Model model){
         try{
             String pass = encoder.encode("user1");
-            accountService.adminCreateUser(userDTO,"USER",pass);
+            adminService.adminCreateUser(userDTO,"USER",pass);
+            String token = generateToken(userDTO);
+            emailService.sendPasswordLink(userDTO.getMail(),token);
             model.addAttribute("user",new preCreatedUserDTO());
             model.addAttribute("response","User added successfully");
             return "userRegister";
-
         }catch (HttpClientErrorException e){
             errorMessage(model,e.getResponseBodyAsString(),"user",userDTO);
             return "userRegister";
         }
 
+    }
+    private String generateToken(preCreatedUserDTO userDTO) {
+        String token = UUID.randomUUID().toString();
+        PasswordTokenDTO tokenDTO = new PasswordTokenDTO();
+        tokenDTO.setMail(userDTO.getMail());
+        tokenDTO.setToken(token);
+        tokenDTO.setExpireDate(LocalDateTime.now().plusMinutes(30));
+        passResetService.saveToken(tokenDTO);
+        return token;
     }
     static void errorMessage(Model model, String s, String attribName, preCreatedUserDTO preCreatedUserDTO) {
         Map<String, String> errors = new HashMap<>();

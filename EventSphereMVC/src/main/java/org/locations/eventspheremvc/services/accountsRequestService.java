@@ -4,6 +4,7 @@ import DTOs.preCreatedUserDTO;
 import DTOs.userRegisterDTO;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,17 +24,17 @@ public class accountsRequestService {
     }
     public String createUser(userRegisterDTO userRegisterDTO,String role){
         userRegisterDTO.setROLE(role);
-        userRegisterDTO.setPASSWORD(userRegisterDTO.getPASSWORD());
+        userRegisterDTO.setNON_LOCKED(true);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<userRegisterDTO> request = new HttpEntity<>(userRegisterDTO,headers);
         return restTemplate.postForObject(userApiURL,request,String.class);
     }
-    public String adminCreateUser(preCreatedUserDTO userDTO, String role, String password){
-        userRegisterDTO user = new userRegisterDTO("_","_",userDTO.getMail(),password,userDTO.getUsername(),role);
+    public String updateUser(userRegisterDTO user){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<userRegisterDTO> request = new HttpEntity<>(user,headers);
-        return restTemplate.postForObject(userApiURL,request,String.class);
+        return restTemplate.exchange(userApiURL+"/registry", HttpMethod.PUT,request,String.class).getBody();
     }
+
 }

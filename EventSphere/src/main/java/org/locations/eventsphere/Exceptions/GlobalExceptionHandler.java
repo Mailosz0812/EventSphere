@@ -46,4 +46,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleNoSuchUserException(NoSuchUserException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+    @ExceptionHandler(NoSuchTokenException.class)
+    public ResponseEntity handleNoSuchTokenException(NoSuchTokenException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }

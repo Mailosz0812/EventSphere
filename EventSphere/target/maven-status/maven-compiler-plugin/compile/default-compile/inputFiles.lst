@@ -1,5 +1,6 @@
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Configs\beanConfig.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Controllers\eventController.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Controllers\PasswordResetController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Controllers\userController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Comment.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\ESubscribeID.java
@@ -7,6 +8,7 @@ C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locat
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\EventCategory.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\EventSubscribe.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\LoggedUser.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\PasswordResetToken.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Payment.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Role.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Entities\Ticket.java
@@ -19,17 +21,22 @@ C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locat
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\NoSuchCategoryException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\NoSuchEventException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\NoSuchRoleException.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\NoSuchTokenException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\NoSuchUserException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\RoleException.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\TokenException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\UserAlreadyExistsException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Exceptions\UserException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\mappers\impl\eventMapper.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\mappers\impl\PassTokenMapper.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\mappers\impl\userMapper.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\mappers\impl\userRegisterMapper.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\mappers\Mapper.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Repositories\eventCategoryRepository.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Repositories\eventRepository.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Repositories\passwordResetRepository.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Repositories\roleRepository.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Repositories\userRepository.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Services\eventService.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Services\passwordResetService.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphere\src\main\java\org\locations\eventsphere\Services\userService.java
