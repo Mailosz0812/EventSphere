@@ -16,6 +16,10 @@ import org.locations.eventsphere.Repositories.eventRepository;
 import org.locations.eventsphere.mappers.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -52,32 +56,15 @@ public class userService {
     private Role checkRole(String roleString) {
         Optional<Role> role = roleRepo.findRoleByNAME(roleString);
         if(role.isEmpty()){
-            throw new NoSuchRoleException("No such role as:" + roleString);
+            throw new NoSuchRoleException("Role not found");
         }
         return role.get();
     }
-    public List<userDTO> findOrganizersByEvent(String eventName){
-        Event event = getEvent(eventName);
-        List<LoggedUser> organizers = userRepo.findOrganizerByEvent(event);
-        return userMapper.mapToList(organizers);
-    }
 
-    private Event getEvent(String eventName) {
-        Optional<Event> eventOptional = eventRepo.findEventByNAME(eventName);
-        if(eventOptional.isEmpty()){
-            throw new NoSuchEventException("No such event: "+ eventName);
-        }
-        return eventOptional.get();
-    }
-    public List<userDTO> findUsersByEvent(String eventName){
-        Event event = getEvent(eventName);
-        List<LoggedUser> userList = userRepo.findUsersByEvent(event);
-        return userMapper.mapToList(userList);
-    }
     public userDTO updateUser(userDTO userDTO){
         Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMAIL(userDTO.getMAIL());
         if(loggedUserOptional.isEmpty()){
-            throw new NoSuchUserException("No such user with mail: "+userDTO.getMAIL());
+            throw new NoSuchUserException("User not found");
         }
         LoggedUser updateUser = loggedUserOptional.get();
         updateUser.setNAME(userDTO.getNAME());
@@ -88,7 +75,7 @@ public class userService {
     public userRegisterDTO updateUserRegister(userRegisterDTO userDTO){
         Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMAIL(userDTO.getMAIL());
         if(loggedUserOptional.isEmpty()){
-            throw new NoSuchUserException("No such user with mail: "+userDTO.getMAIL());
+            throw new NoSuchUserException("User not found");
         }
         LoggedUser updateUser = loggedUserOptional.get();
         updateUser.setNAME(userDTO.getNAME());
@@ -103,8 +90,36 @@ public class userService {
     public userRegisterDTO getUserByMail(String mail){
         Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMAIL(mail);
         if(optionalLoggedUser.isEmpty()){
-            throw new NoSuchUserException("No such user with mail: "+mail);
+            throw new NoSuchUserException("User not found");
         }
         return userRegisterMapper.mapTo(optionalLoggedUser.get());
+    }
+    public userDTO getUserByUsername(String username){
+        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUSERNAME(username);
+        if(optionalLoggedUser.isEmpty()){
+            throw new NoSuchUserException("User not found");
+        }
+        return userMapper.mapTo(optionalLoggedUser.get());
+    }
+    public userDTO setBlockUser(String mail){
+        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMAIL(mail);
+        if(optionalLoggedUser.isEmpty()){
+            throw new NoSuchUserException("User not found");
+        }
+        LoggedUser loggedUser = optionalLoggedUser.get();
+        boolean isLocked = loggedUser.isNON_LOCKED();
+        loggedUser.setNON_LOCKED(!isLocked);
+        return userMapper.mapTo(userRepo.save(loggedUser));
+    }
+    public List<userDTO> usersRegistered(){
+        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime firstDay = time.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        System.out.println(firstDay);
+        List<LoggedUser> users = userRepo.findLoggedUsersByUSER_TIMESTAMP(firstDay);
+        return userMapper.mapToList(users);
+    }
+    public String usersCount(String role){
+        Role eRole = checkRole(role);
+        return String.valueOf(userRepo.countLoggedUserByROLE(eRole));
     }
 }

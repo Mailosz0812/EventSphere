@@ -1,6 +1,7 @@
-DTOs\commentDTO.class
 DTOs\eventDTO.class
-DTOs\preCreatedUserDTO.class
 DTOs\userDTO.class
 DTOs\userRegisterDTO.class
+DTOs\userRegisterDTO$userRegisterDTOBuilder.class
 DTOs\PasswordTokenDTO.class
+DTOs\commentDTO.class
+DTOs\preCreatedUserDTO.class

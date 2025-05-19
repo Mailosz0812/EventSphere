@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{adminView}">
+      layout:decorate="~{panelView}">
 
 <head>
     <meta charset="UTF-8">
@@ -13,13 +13,11 @@
         <div class="col-lg-6 mx-auto rounded border p-4">
             <h2 class="text-center mb-4">Register</h2>
             <form action="#" method="post" th:object="${user}" th:action="@{/admin/register/user}">
-
                 <div class="mb-3">
                     <label for="InputEmail" class="form-label">Email address</label>
                     <input type="email" th:field="*{mail}" class="form-control" id="InputEmail">
                     <p th:if="${errors != null and errors.containsKey('MAIL')}" th:text="${errors['MAIL']}" class="text-danger"></p>
                 </div>
-
                 <div class="mb-3">
                     <label for="nameInput" class="form-label">Name</label>
                     <input type="text" th:field="*{username}" class="form-control" id="nameInput">
@@ -33,7 +31,6 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

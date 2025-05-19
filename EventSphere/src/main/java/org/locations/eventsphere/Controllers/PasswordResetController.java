@@ -15,17 +15,14 @@ public class PasswordResetController {
     }
     @PostMapping
     public PasswordTokenDTO saveToken(@RequestBody PasswordTokenDTO passTokenDTO){
-        System.out.println(passTokenDTO.getToken());
         return passResetService.saveToken(passTokenDTO);
     }
     @GetMapping("/user")
     public userRegisterDTO getUserByToken(@RequestParam("token") String token){
-        System.out.println(token);
         return passResetService.getUserByToken(token);
     }
     @GetMapping
     public PasswordTokenDTO getToken(@RequestParam("token") String token){
-        System.out.println(token);
         return passResetService.getToken(token);
     }
     @DeleteMapping

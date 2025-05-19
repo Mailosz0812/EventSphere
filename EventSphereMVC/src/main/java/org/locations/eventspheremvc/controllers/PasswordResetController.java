@@ -2,8 +2,10 @@ package org.locations.eventspheremvc.controllers;
 
 import DTOs.PasswordTokenDTO;
 import DTOs.userRegisterDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.locations.eventspheremvc.services.EmailService;
 import org.locations.eventspheremvc.services.PasswordResetReqService;
+import org.locations.eventspheremvc.services.PasswordValidator;
 import org.locations.eventspheremvc.services.accountsRequestService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,16 +21,16 @@ import java.util.UUID;
 public class PasswordResetController {
     private final PasswordResetReqService passRequestService;
     private final accountsRequestService accountService;
-    private final PasswordEncoder encoder;
     private final EmailService emailService;
+    private final PasswordValidator passwordValidator;
 
     public PasswordResetController(PasswordResetReqService passRequestService,
-                                   accountsRequestService accountService,
-                                   PasswordEncoder encoder, EmailService emailService) {
+                                   accountsRequestService accountService, EmailService emailService,
+                                   PasswordValidator passwordValidator) {
         this.passRequestService = passRequestService;
         this.accountService = accountService;
-        this.encoder = encoder;
         this.emailService = emailService;
+        this.passwordValidator = passwordValidator;
     }
 
     @GetMapping
@@ -43,21 +45,15 @@ public class PasswordResetController {
         }
     }
     @PostMapping
-    public String setPassword(Model model, @RequestParam("newPassword") String password, @RequestParam String token){
+    public String setPassword(Model model, @RequestParam("newPassword") String password, @RequestParam String token, HttpServletRequest request){
         try {
             userRegisterDTO user = passRequestService.getUserByToken(token);
-            if(password.length() < 8){
-                model.addAttribute("error","Password too short");
-                model.addAttribute("token",token);
-                return "setPasswordView";
-            }
-            user.setPASSWORD(encoder.encode(password));
+            user.setPASSWORD(passwordValidator.validatePassword(user,password));
             user.setNON_LOCKED(true);
             accountService.updateUser(user);
             passRequestService.deleteToken(token);
             return "redirect:/login";
         }catch (HttpClientErrorException e){
-            System.out.println(e.getResponseBodyAsString());
             model.addAttribute("error",e.getResponseBodyAsString());
             model.addAttribute(token);
             return "setPasswordView";
@@ -65,7 +61,7 @@ public class PasswordResetController {
     }
     @GetMapping("/invalid-token")
     public String invalidTokenView(){
-        return "invalidTokenView";
+        return "errorView";
     }
     @GetMapping("/password")
     public String resetPasswordView(){

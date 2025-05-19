@@ -1,25 +1,22 @@
 package org.locations.eventspheremvc.controllers;
 
-import DTOs.PasswordTokenDTO;
-import DTOs.preCreatedUserDTO;
+import DTOs.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.constraints.Email;
-import org.locations.eventspheremvc.services.AdminRequestService;
-import org.locations.eventspheremvc.services.EmailService;
-import org.locations.eventspheremvc.services.PasswordResetReqService;
-import org.locations.eventspheremvc.services.accountsRequestService;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.locations.eventspheremvc.services.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,21 +25,32 @@ import java.util.UUID;
 public class AdminController {
     private final AdminRequestService adminService;
     private final PasswordResetReqService passResetService;
-    private final PasswordEncoder encoder;
     private final EmailService emailService;
+    private final accountsRequestService userService;
+    private final eventRequestService eventService;
 
-    public AdminController(AdminRequestService adminService, PasswordResetReqService passResetService, PasswordEncoder encoder, EmailService emailService) {
+    public AdminController(AdminRequestService adminService, PasswordResetReqService passResetService, EmailService emailService, accountsRequestService userService, eventRequestService eventService) {
         this.adminService = adminService;
         this.passResetService = passResetService;
-        this.encoder = encoder;
         this.emailService = emailService;
+        this.userService = userService;
+        this.eventService = eventService;
     }
 
     @GetMapping
-    public String adminView(){
-        return "adminView";
+    public String userView(Model model){
+        List<userDTO> weekUsers = adminService.usersOfWeek();
+        List<eventDTO> weekEvents = adminService.getWeekEvents();
+        model.addAttribute("weekUsers",weekUsers);
+        model.addAttribute("weekEvents",weekEvents);
+        String userNum = adminService.getUsersCount("USER");
+        String organizerNum = adminService.getUsersCount("ORGANIZER");
+        String eventNum = eventService.countEvent();
+        model.addAttribute("usersCount",userNum);
+        model.addAttribute("organizerCount",organizerNum);
+        model.addAttribute("eventCount",eventNum);
+        return "panelView";
     }
-
     @GetMapping("/sys")
     public String registerAdminView(Model model){
         model.addAttribute("admin",new preCreatedUserDTO());
@@ -51,8 +59,7 @@ public class AdminController {
     @PostMapping("/sys")
     public String registerAdmin(@ModelAttribute preCreatedUserDTO admin, Model model){
         try {
-            String pass = encoder.encode("admin1");
-            adminService.adminCreateUser(admin,"ADMIN",pass);
+            adminService.adminCreateUser(admin,"ADMIN");
             String token = generateToken(admin);
             emailService.sendPasswordLink(admin.getMail(),token);
             model.addAttribute("admin",new preCreatedUserDTO());
@@ -64,8 +71,22 @@ public class AdminController {
         }
     }
     @GetMapping("/organizers")
-    public String organizersView(){
-        return "organizersView";
+    public String organizersView(Model model){
+        List<userDTO> userDTOs = adminService.getUsersByRole("ORGANIZER");
+        model.addAttribute("userList",userDTOs);
+        return "usersView";
+    }
+    @GetMapping("/users")
+    public String usersView(Model model){
+        List<userDTO> userDTOs = adminService.getUsersByRole("USER");
+        model.addAttribute("userList",userDTOs);
+        return "usersView";
+    }
+    @GetMapping("/admins")
+    public String adminsView(Model model){
+        List<userDTO> userDTOs = adminService.getUsersByRole("ADMIN");
+        model.addAttribute("userList",userDTOs);
+        return "usersView";
     }
     @GetMapping("/register/organizer")
     public String registerOrganizerView(Model model){
@@ -75,8 +96,7 @@ public class AdminController {
     @PostMapping("register/organizer")
     public String registerOrganizer(@ModelAttribute preCreatedUserDTO organizer, Model model){
         try {
-            String pass = encoder.encode("organizer1");
-            adminService.adminCreateUser(organizer, "ORGANIZER",pass);
+            adminService.adminCreateUser(organizer, "ORGANIZER");
             String token = generateToken(organizer);
             emailService.sendPasswordLink(organizer.getMail(),token);
             model.addAttribute("organizer",new preCreatedUserDTO());
@@ -96,8 +116,7 @@ public class AdminController {
     @PostMapping("/register/user")
     public String registerUser(@ModelAttribute preCreatedUserDTO userDTO,Model model){
         try{
-            String pass = encoder.encode("user1");
-            adminService.adminCreateUser(userDTO,"USER",pass);
+            adminService.adminCreateUser(userDTO,"USER");
             String token = generateToken(userDTO);
             emailService.sendPasswordLink(userDTO.getMail(),token);
             model.addAttribute("user",new preCreatedUserDTO());
@@ -109,6 +128,24 @@ public class AdminController {
         }
 
     }
+    @GetMapping("/message")
+    public String sendMessage(Model model,@RequestParam("username") String username){
+        userDTO user = userService.getUserByUsername(username);
+        messageDTO attributeValue = new messageDTO();
+        attributeValue.setTo(user.getMAIL());
+        model.addAttribute("message", attributeValue);
+        return "sendMessageView";
+    }
+    @PostMapping("/message")
+    public String sendMessage(@ModelAttribute @Valid messageDTO message,Model model){
+        emailService.sendMessage(message);
+        messageDTO attributeValue = new messageDTO();
+        attributeValue.setTo(message.getTo());
+        model.addAttribute("message", attributeValue);
+        model.addAttribute("response","Message sent successfully");
+        return "sendMessageView";
+    }
+    @GetMapping("/")
     private String generateToken(preCreatedUserDTO userDTO) {
         String token = UUID.randomUUID().toString();
         PasswordTokenDTO tokenDTO = new PasswordTokenDTO();
@@ -117,6 +154,23 @@ public class AdminController {
         tokenDTO.setExpireDate(LocalDateTime.now().plusMinutes(30));
         passResetService.saveToken(tokenDTO);
         return token;
+    }
+    @PostMapping("/block")
+    public String blockUser(String mail, HttpServletRequest request){
+        try {
+            String url = request.getHeader("Referer");
+            adminService.blockUser(mail);
+            return "redirect:"+url;
+        }catch (HttpClientErrorException e){
+            System.out.println(e.getResponseBodyAsString());
+            return "errorView";
+        }
+    }
+    @GetMapping("/events")
+    public String getEvents(Model model){
+        List<eventDTO> events = adminService.getEvents();
+        model.addAttribute("eventsList",events);
+        return "eventsView";
     }
     static void errorMessage(Model model, String s, String attribName, preCreatedUserDTO preCreatedUserDTO) {
         Map<String, String> errors = new HashMap<>();

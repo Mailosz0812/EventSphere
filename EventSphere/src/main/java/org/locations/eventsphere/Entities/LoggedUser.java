@@ -4,9 +4,8 @@ package org.locations.eventsphere.Entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "LOGGEDUSER")
@@ -33,7 +32,12 @@ public class LoggedUser {
     private String USERNAME;
     private String DESCRIPTION;
     private boolean NON_LOCKED;
-
+    @Column(updatable = false)
+    private LocalDateTime userTimestamp;
+    @PrePersist
+    protected void onCreate(){
+        this.userTimestamp = LocalDateTime.now();
+    }
     public LoggedUser(String NAME, String SURNAME, String MAIL,String PASSWORD, String USERNAME) {
         this.NAME = NAME;
         this.SURNAME = SURNAME;

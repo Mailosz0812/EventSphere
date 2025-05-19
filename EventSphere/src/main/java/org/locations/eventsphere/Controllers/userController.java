@@ -15,7 +15,7 @@ public class userController {
         this.userService = userService;
     }
     @PostMapping()
-    public ResponseEntity<String> createUser(@RequestBody @Valid userRegisterDTO userDTO){
+    public ResponseEntity<String> createUser(@RequestBody userRegisterDTO userDTO){
         userService.createUser(userDTO);
         return ResponseEntity.ok("User registered successfully");
     }
@@ -23,24 +23,33 @@ public class userController {
     public List<userDTO> getUsers(@RequestParam("role") String role){
         return userService.getUsersByRole(role);
     }
-
     @PutMapping
     public userDTO updateUser(@RequestBody userDTO userDTO){
         return userService.updateUser(userDTO);
     }
 
-    @GetMapping("/getUser")
-    public userRegisterDTO getUser(@RequestParam("mail") String mail){
+    @GetMapping("/getUser/mail")
+    public userRegisterDTO getUserByMail(@RequestParam("mail") String mail){
         return userService.getUserByMail(mail);
     }
     @PutMapping("/registry")
     public userRegisterDTO updateRegisterUser(@RequestBody userRegisterDTO user){
-        System.out.println(user.getMAIL());
-        System.out.println(user.getROLE());
-        System.out.println(user.getPASSWORD());
-        System.out.println(user.getNAME());
-        System.out.println(user.getSURNAME());
         return userService.updateUserRegister(user);
     }
-
+    @PutMapping("/block")
+    public userDTO blockUser(@RequestBody String mail){
+        return userService.setBlockUser(mail);
+    }
+    @GetMapping("/getUser/username")
+    public userDTO getUserByUsername(@RequestParam("username") String username){
+        return userService.getUserByUsername(username);
+    }
+    @GetMapping("/getUsers/week")
+    public List<userDTO> getUsersOfWeek(){
+        return userService.usersRegistered();
+    }
+    @GetMapping("/getUsers/count")
+    public String usersCount(@RequestParam("role") String role){
+        return userService.usersCount(role);
+    }
 }

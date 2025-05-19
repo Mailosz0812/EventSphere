@@ -8,18 +8,17 @@ import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class userRegisterDTO {
-    @NotEmpty(message = "name must be provided")
+    @NotEmpty(message = "Name must be provided")
     private String NAME;
-    @NotEmpty(message = "surname must be provided")
+    @NotEmpty(message = "Surname must be provided")
     private String SURNAME;
     @Email(message = "Invalid Email format")
     @NotEmpty(message = "Email must be provided")
     private String MAIL;
-    @NotEmpty(message = "Password must be provided")
-    @Size(min = 8, message = "Minimum password length is 8 characters")
     private String PASSWORD;
     @NotEmpty(message = "Username must be provided")
     private String USERNAME;
