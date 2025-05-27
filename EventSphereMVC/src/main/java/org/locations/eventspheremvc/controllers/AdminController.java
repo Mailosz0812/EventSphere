@@ -168,7 +168,7 @@ public class AdminController {
     }
     @GetMapping("/events")
     public String getEvents(Model model){
-        List<eventDTO> events = adminService.getEvents();
+        List<eventDTO> events = eventService.getAllEvents();
         model.addAttribute("eventsList",events);
         return "eventsView";
     }

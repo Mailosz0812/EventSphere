@@ -8,18 +8,43 @@
     <title>Event Sphere</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .event-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-image-wrapper {
+            height: 13em;
+            background-color: #f8f9fa; /* jasne tło w razie braku obrazka */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .event-image-wrapper img {
+            max-height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-md text-white bg-dark pb-3 pt-3">
     <div class="container-fluid d-flex align-items-center flex-nowrap">
         <a class="navbar-brand fs-4 text-white" th:href="@{/}">Event Sphere</a>
 
-        <!-- Hamburger Button -->
         <button class="navbar-toggler bg-white ms-2 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!-- Collapsable Menu -->
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav  ms-3 me-auto">
                 <li class="nav-item me-3">
@@ -35,7 +60,7 @@
                     <a class="nav-link text-white" th:href="@{/admin}">Admin Panel</a>
                 </li>
                 <li sec:authorize="hasRole('USER')" class="nav-item me-3">
-                    <a class = "nav-link text-white" th:href = "@{/home}">User Panel</a>
+                    <a class = "nav-link text-white" th:href = "@{/home}">Account</a>
                 </li>
                 <li sec:authorize="hasRole('ORGANIZER')" class="nav-item me-3">
                     <a class = "nav-link text-white" th:href = "@{/home}">Organizer Panel</a>
@@ -62,7 +87,48 @@
 
     </div>
 </nav>
-<!-- Bootstrap JS -->
+<div layout:fragment="content">
+<div class="container-fluid mt-3 d-flex">
+        <form method="get" th:action="@{/}" class="d-flex align-items-center gap-2">
+            <label for="categorySelect">Category</label>
+            <select id="categorySelect" class="form-select" onchange="this.form.submit()" name="category">
+                <option th:selected="${selectedCategory == category.NAME}" th:if="${categories != null}" th:each="category :${categories}" th:text="${category.NAME}" th:value="${category.NAME}"></option>
+                <option value="ALL" th:selected="${selectedCategory == 'ALL'}">ALL</option>
+            </select>
+        </form>
+</div>
+<div>
+    <div class="container-fluid ps-4 pe-4 mt-4">
+        <div class="row">
+            <div th:each="event : ${eventList}" class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
+                <div class="card event-card w-100">
+                    <div class="event-image-wrapper">
+                        <img
+                                th:if="${altTextMap.containsKey(event.NAME)}"
+                                th:alt="${altTextMap.get(event.NAME)}"
+                                th:src="@{/image(eName=${event.NAME})}" />
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <h5 class="card-title mb-2" th:text="${event.NAME}"></h5>
+                            <p class="card-text mb-2" th:text="${event.LOCATION}"></p>
+                        </div>
+                        <div>
+                            <a th:href="@{/event/details(eName=${event.NAME})}" class="btn btn-outline-success mb-2">View details</a>
+                            <form th:if="${subStateMap.get(event.NAME)} == false" sec:authorize="hasRole('USER')" th:action="@{/event/subscribe(name=${event.NAME})}" method="post">
+                                <button  type="submit" class="btn btn-dark" >Subscribe</button>
+                            </form>
+                            <form th:if="${subStateMap.get(event.NAME)} == true" sec:authorize="hasRole('USER')" th:action="@{/event/unsubscribe(name=${event.NAME})}" method="post">
+                                <button type="submit" class="btn btn-dark">Unsubscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

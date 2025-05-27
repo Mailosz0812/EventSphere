@@ -1,5 +1,7 @@
 package org.locations.eventsphere.Services;
 import DTOs.eventDTO;
+import DTOs.imageEventDTO;
+import DTOs.subscribeDTO;
 import DTOs.userRegisterDTO;
 import org.locations.eventsphere.Entities.*;
 import org.locations.eventsphere.Exceptions.EventAlreadyExistsException;
@@ -13,22 +15,19 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 @Service
 public class eventService {
     private eventRepository eventRepo;
     private userRepository userRepo;
-    private roleRepository roleRepo;
     private Mapper<Event, eventDTO> eventMapper;
     private eventCategoryRepository categoryRepo;
     private eventOrganizeRepository eOrganizeRepository;
 
-    public eventService(eventRepository eventRepo, userRepository userRepo, roleRepository roleRepo, Mapper<Event, eventDTO> eventMapper, eventCategoryRepository categoryRepo, eventOrganizeRepository eOrganizeRepository) {
+    public eventService(eventRepository eventRepo, userRepository userRepo, Mapper<Event, eventDTO> eventMapper, eventCategoryRepository categoryRepo, eventOrganizeRepository eOrganizeRepository) {
         this.eventRepo = eventRepo;
         this.userRepo = userRepo;
-        this.roleRepo = roleRepo;
         this.eventMapper = eventMapper;
         this.categoryRepo = categoryRepo;
         this.eOrganizeRepository = eOrganizeRepository;
@@ -41,7 +40,7 @@ public class eventService {
         }
         Optional<LoggedUser> organizerOptional = userRepo.findLoggedUserByMAIL(eventDTO.getOrganizerMail());
         if(organizerOptional.isEmpty()){
-            throw new NoSuchUserException("Something went wrong :(");
+            throw new NoSuchUserException("Organizer not found");
         }
         EventCategory category = checkCategory(eventDTO);
         Event newEvent = eventMapper.mapFrom(eventDTO);
@@ -57,7 +56,7 @@ public class eventService {
     private EventCategory checkCategory(eventDTO eventDTO) {
         Optional<EventCategory> categoryOptional = categoryRepo.findEventCategoryByNAME(eventDTO.getCATEGORY());
         if(categoryOptional.isEmpty()){
-            throw new NoSuchCategoryException("No category named: "+ eventDTO.getCATEGORY());
+            throw new NoSuchCategoryException("Category not found");
         }
         return categoryOptional.get();
     }
@@ -82,7 +81,7 @@ public class eventService {
     public eventDTO eventDetails(String name){
         Optional<Event> eventOptional = eventRepo.findEventByNAME(name);
         if(eventOptional.isEmpty()){
-            throw new NoSuchEventException("Invalid event name");
+            throw new NoSuchEventException("Event not found");
         }
         return eventMapper.mapTo(eventOptional.get());
     }
@@ -99,10 +98,18 @@ public class eventService {
         List<Event> events = eventRepo.findEventsBy();
         return eventMapper.mapToList(events);
     }
+    public List<eventDTO> getEventsByCategory(String category){
+        Optional<EventCategory> optECategory = categoryRepo.findEventCategoryByNAME(category);
+        if(optECategory.isEmpty()){
+            throw new NoSuchCategoryException("Category not found");
+        }
+        List<Event> events = eventRepo.findEventsByEVENTCATEGORY(optECategory.get());
+        return eventMapper.mapToList(events);
+    }
     private Event checkEvent(eventDTO eventDTO) {
         Optional<Event> eventOptional = eventRepo.findEventByNAME(eventDTO.getNAME());
         if (eventOptional.isEmpty()) {
-            throw new NoSuchEventException("Invalid event name");
+            throw new NoSuchEventException("Event not found");
         }
         return eventOptional.get();
     }

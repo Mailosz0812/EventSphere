@@ -23,12 +23,12 @@
         <a th:href="@{/}" class="fs-3 text-white text-decoration-none">Event Sphere</a>
         <span  sec:authorize="hasAnyRole('ADMIN','SYS_ADMIN')" class="me-auto mt-1 fs-6">Admin Panel</span>
         <span sec:authorize="hasRole('ORGANIZER')" class="me-auto mt-1 fs-6">Organizer Panel</span>
-        <span sec:authorize="hasRole('USER')" class="me-auto mt-1 fs-6">User Panel</span>
+        <span sec:authorize="hasRole('USER')" class="me-auto mt-1 fs-6">Account</span>
     </a>
     <hr>
     <ul sec:authorize="hasRole('USER')" class="nav nav-pills flex-column mb-auto fs-6">
         <li class="nav-item">
-            <a th:href="@{/home}" class="nav-link active mb-1" aria-current="page">
+            <a th:href="@{/home}" class="nav-link text-white mb-1" aria-current="page">
                 <i class="bi bi-house-door fs-5 me-2"></i>
                 Home
             </a>
@@ -158,10 +158,11 @@
                     </div>
                 </div>
             </div>
-            <div class="card shadow" style="width: 25rem; min-width: 320px">
+            <div class="card shadow" style=" width: 25rem; min-width: 320px">
                 <h2 class="card-title lead p-4 border-bottom" style="font-weight: 600">
                     Recently added Events
                 </h2>
+                <div style="max-height: 500px; overflow-y: auto;">
                 <div th:each="event : ${weekEvents}" class="d-flex pane border-bottom p-3">
                     <i class="bi bi-calendar-event fs-2 mx-1"></i>
                     <div class="ms-3">
@@ -171,6 +172,7 @@
                         <p class="card-text mb-0 small text-muted" th:text="${event.LOCATION}">
                         </p>
                     </div>
+                </div>
                 </div>
                 <div class="card-text p-4 pointer border-top text-decoration-none d-flex justify-content-center gap-4">
                     <a  th:href="@{/admin/events}" class="btn btn-outline-dark">See All</a>
@@ -199,6 +201,54 @@
         </div>
     </div>
     <div sec:authorize="hasRole('ORGANIZER')" layout:fragment="content" class="d-flex justify-content-center">
+
+    </div>
+    <div sec:authorize="hasRole('USER')" layout:fragment="content" class="d-flex justify-content-center">
+        <div class="container d-flex align-items-start p-4">
+        <div>
+        <div class="m-5 shadow card margin-none" style="width: 15rem">
+            <div class="card-body">
+                <div class="lead mb-2">Subscribed Events</div>
+                <h2 class="card-title" th:text="${countSub}" ></h2>
+            </div>
+        </div>
+        <div class="m-5 shadow card margin-none" style="width: 15rem">
+            <div class="card-body">
+                <div class="lead mb-2">Tickets bought</div>
+                <h2 class="card-title" th:text="${organizerCount}" ></h2>
+            </div>
+        </div>
+        </div>
+        <div class="card shadow" style="width: 25rem; min-width: 320px">
+            <h2 class="card-title lead p-4 border-bottom" style="font-weight: 600">
+                Incoming events
+            </h2>
+            <div th:each="event : ${incomingEvents}" class="d-flex pane border-bottom p-3">
+                <i class="bi bi-calendar-event fs-2 mx-1"></i>
+                <div class="ms-3">
+                    <h2 class="card-title mb-1 lead"  style="font-weight: 600" th:text="${event.NAME}"></h2>
+                    <p class="card-text mb-0 small text-muted" th:text="${event.EVENTDATE}"></p>
+                    <p class="card-text mb-0 small text-muted" th:text="${event.LOCATION}">
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="ms-5 card shadow" style="width: 25rem; min-width: 320px">
+            <h2 class="card-title lead p-4 border-bottom" style="font-weight: 600">
+                Recently subscribed events
+            </h2>
+            <div th:each="event : ${recentEvents}" class="d-flex pane border-bottom p-3 align-items-center gap-5">
+                <div class="d-flex">
+                <i class="bi bi-calendar-event fs-2 mx-1"></i>
+                <div class="ms-3">
+                    <h2 class="card-title mb-1 lead"  style="font-weight: 600" th:text="${event.NAME}"></h2>
+                    <p class="card-text mb-0 small text-muted"  th:text="${event.EVENTDATE}"></p>
+                    <p class="card-text mb-0 small text-muted" th:text="${event.LOCATION}"></p>
+                </div>
+                </div>
+            </div>
+        </div>
+        </div>
 
     </div>
 </div>

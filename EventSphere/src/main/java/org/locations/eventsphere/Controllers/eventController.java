@@ -1,17 +1,22 @@
 package org.locations.eventsphere.Controllers;
 
 import DTOs.eventDTO;
+import DTOs.imageEventDTO;
+import DTOs.subscribeDTO;
 import jakarta.validation.Valid;
-import org.locations.eventsphere.Services.eventService;
-import org.springframework.web.bind.annotation.*;
 
+import org.locations.eventsphere.Repositories.subscribeRepository;
+import org.locations.eventsphere.Services.eventService;
+import org.locations.eventsphere.Services.subscribeService;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/event")
 public class eventController {
-    private eventService eventService;
-    public eventController(org.locations.eventsphere.Services.eventService eventService) {
+    private final eventService eventService;
+
+    public eventController(eventService eventService) {
         this.eventService = eventService;
     }
 
@@ -41,7 +46,11 @@ public class eventController {
         return eventService.getRecentEvents();
     }
     @GetMapping("/events/all")
-    public List<eventDTO> getAllEvents(){
-        return eventService.getEvents();
+    public List<eventDTO> getAllEvents(@RequestParam(value = "category",required = false) String category){
+        if(category == null){
+            return eventService.getEvents();
+        }
+        return eventService.getEventsByCategory(category);
     }
+
 }

@@ -1,6 +1,7 @@
 package org.locations.eventsphere.Repositories;
 
 import org.locations.eventsphere.Entities.Event;
+import org.locations.eventsphere.Entities.EventCategory;
 import org.locations.eventsphere.Entities.LoggedUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,6 @@ public interface eventRepository extends JpaRepository<Event,Long> {
     List<Event> findEventsByOrganizer(@Param("organizer") LoggedUser organizer);
     int countEventsBy();
     List<Event> findEventsByCreatedAtAfter(LocalDateTime time);
+    List<Event> findEventsByEVENTCATEGORY(EventCategory category);
     List<Event> findEventsBy();
 }

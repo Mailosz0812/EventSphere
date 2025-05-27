@@ -24,6 +24,7 @@ public class eventDTO {
     private LocalDate EVENTDATE;
     @NotNull(message = "Number of tickets must be provided")
     @Positive(message = "Number of tickets must be positive")
+    @Digits(integer=5, fraction = 0,message = "Try smaller number")
     private int TICKETCOUNT;
     @NotEmpty(message = "Location must be provided")
     private String LOCATION;
@@ -34,4 +35,5 @@ public class eventDTO {
     private String CATEGORY;
 
     private String organizerMail;
+
 }

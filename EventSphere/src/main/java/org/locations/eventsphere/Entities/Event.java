@@ -29,6 +29,8 @@ public class Event {
     private List<EventOrganize> organizes;
     @Column(updatable = false)
     private LocalDateTime createdAt;
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private EventImage eventImage;
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();

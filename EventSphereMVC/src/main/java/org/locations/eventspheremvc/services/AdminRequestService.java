@@ -73,14 +73,5 @@ public class AdminRequestService {
         );
         return events.getBody();
     }
-    public List<eventDTO> getEvents(){
-        String apiUrl = ApiURL + "event/events/all";
-        ResponseEntity<List<eventDTO>> events = restTemplate.exchange(
-                apiUrl,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<eventDTO>>() {}
-        );
-        return events.getBody();
-    }
+
 }

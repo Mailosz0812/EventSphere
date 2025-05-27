@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +49,22 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(NoSuchTokenException.class)
     public ResponseEntity handleNoSuchTokenException(NoSuchTokenException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    @ExceptionHandler(IOException.class)
+    public  ResponseEntity handleIOException(IOException e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong, try again later");
+    }
+    @ExceptionHandler(eventImageProcessingException.class)
+    public ResponseEntity handleEventImageProcessingException(eventImageProcessingException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    @ExceptionHandler(EventImageAlreadyExists.class)
+    public ResponseEntity handleEventImageAlreadyExists(EventImageAlreadyExists e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    @ExceptionHandler(subscribeProcessingException.class)
+    public ResponseEntity handleSubscribeProcessingException(subscribeProcessingException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

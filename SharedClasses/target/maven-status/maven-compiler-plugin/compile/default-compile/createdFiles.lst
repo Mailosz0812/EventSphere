@@ -1,7 +1,11 @@
 DTOs\eventDTO.class
 DTOs\userDTO.class
+DTOs\imageEventDTO.class
 DTOs\userRegisterDTO.class
+DTOs\eventCreationDTO.class
+DTOs\messageDTO.class
 DTOs\userRegisterDTO$userRegisterDTOBuilder.class
 DTOs\PasswordTokenDTO.class
 DTOs\commentDTO.class
 DTOs\preCreatedUserDTO.class
+DTOs\categoryDTO.class

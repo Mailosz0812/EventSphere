@@ -1,11 +1,14 @@
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\config\BeansConfig.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\config\paypalConfig.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\AdminController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\AuthController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\EventController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\OrganizerController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\PasswordResetController.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\PaymentController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\controllers\UserController.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\EventSphereMvcApplication.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Exceptions\EmailException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Exceptions\EventSphereMVCException.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Exceptions\GlobalExceptionHandler.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Exceptions\PasswordException.java
@@ -14,6 +17,9 @@ C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\lo
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\Security\SecurityConfig.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\accountsRequestService.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\AdminRequestService.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\categoryRequestService.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\EmailService.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\eventRequestService.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\PasswordResetReqService.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\PasswordValidator.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\EventSphereMVC\src\main\java\org\locations\eventspheremvc\services\PaypalService.java

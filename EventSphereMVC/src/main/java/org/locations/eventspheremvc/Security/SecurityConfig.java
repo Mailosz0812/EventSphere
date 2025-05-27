@@ -3,6 +3,7 @@ package org.locations.eventspheremvc.Security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin","/admin/**").hasAnyRole("ADMIN","SYS_ADMIN")
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/reset","/reset/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/image" ).permitAll()
+                        .requestMatchers(HttpMethod.GET,"/event/details").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
@@ -38,7 +41,7 @@ public class SecurityConfig {
                 )
                 .rememberMe( remember -> remember
                         .key(secureKey)
-                        .tokenValiditySeconds(1209600)
+                        .tokenValiditySeconds(3600)
                         .rememberMeParameter("remember"))
                 .logout(logout -> logout
                         .logoutUrl("/logout")

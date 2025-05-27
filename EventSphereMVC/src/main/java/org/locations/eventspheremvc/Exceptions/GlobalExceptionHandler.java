@@ -1,9 +1,6 @@
 package org.locations.eventspheremvc.Exceptions;
 
-import DTOs.categoryDTO;
-import DTOs.eventDTO;
-import DTOs.messageDTO;
-import DTOs.userRegisterDTO;
+import DTOs.*;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.locations.eventspheremvc.services.categoryRequestService;
@@ -83,6 +80,7 @@ public class GlobalExceptionHandler {
             }
             model.addAttribute("errors",errors);
             model.addAttribute("event",event);
+            model.addAttribute("iEvent",new imageEventDTO());
             return "modifyEventView";
         }
         return "errorView";
