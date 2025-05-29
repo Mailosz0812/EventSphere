@@ -44,7 +44,7 @@ public class ImageController {
         try {
             System.out.println(eName);
             imageService.deleteImage(eName);
-            return "redirect:/event/update?name=" + eName;
+            return "redirect:/organizer/update?name=" + eName;
         }catch (HttpClientErrorException e){
             eventDTO event = eventService.getEventDetails(eName);
             model.addAttribute("event",event);
@@ -57,14 +57,10 @@ public class ImageController {
     public ResponseEntity<byte[]> getImageBytes(@RequestParam("eName") String eName){
         try{
             imageEventDTO imageDTO = imageService.getImageByEventName(eName);
-            if(imageDTO.getImageBytes() == null){
-                System.out.println("no cos sie zjebalo");
-            }
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
                     .body(imageDTO.getImageBytes());
         }catch(HttpClientErrorException e){
-            System.out.println(e.getResponseBodyAsString());
             return ResponseEntity.ok(null);
         }
     }

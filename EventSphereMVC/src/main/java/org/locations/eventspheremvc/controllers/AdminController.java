@@ -145,7 +145,7 @@ public class AdminController {
         model.addAttribute("response","Message sent successfully");
         return "sendMessageView";
     }
-    @GetMapping("/")
+
     private String generateToken(preCreatedUserDTO userDTO) {
         String token = UUID.randomUUID().toString();
         PasswordTokenDTO tokenDTO = new PasswordTokenDTO();

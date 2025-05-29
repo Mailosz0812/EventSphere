@@ -63,15 +63,11 @@ public class subscribeService {
     public int countSubscribeEvent(String mail){
         return subscribeRepo.countEventSubscribeByLoggedUser_MAIL(mail);
     }
-    public List<eventDTO> getRecentlySubscribed(String mail){
+    public List<eventDTO> getEventsFeed(String mail){
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime firstDay = now.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
-        List<EventSubscribe> recentlySub = subscribeRepo.findEventSubscribeBySubscribedAtAfterAndLoggedUser_MAIL(firstDay,mail);
-        List<Event> events = new ArrayList<>();
-        for (EventSubscribe eventSubscribe : recentlySub) {
-            events.add(eventSubscribe.getEvent());
-        }
-        return eventMapper.mapToList(events);
+        LocalDateTime max = now.minusWeeks(2);
+        List<Event> eventsFeed = subscribeRepo.findEventSubscribesByEvent_MODIFIED_ATAndLoggedUser_Mail(max,now,mail);
+        return eventMapper.mapToList(eventsFeed);
     }
     public List<eventDTO> getIncomingEvents(String mail){
         LocalDate now = LocalDate.now();

@@ -40,8 +40,8 @@ public class userRequestService {
         String apiUrl = url + "?name={name}&mail={mail}";
         return restTemplate.getForObject(apiUrl, Boolean.class,name,mail);
     }
-    public List<eventDTO> recentlySubscribed(String mail){
-        String apiUrl = url + "/recently?mail={mail}";
+    public List<eventDTO> subscribedEventsFeed(String mail){
+        String apiUrl = url + "/feed?mail={mail}";
         ResponseEntity<List<eventDTO>> response = restTemplate.exchange(
                 apiUrl,
                 HttpMethod.GET,

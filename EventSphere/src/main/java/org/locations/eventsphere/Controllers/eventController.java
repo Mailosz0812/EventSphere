@@ -22,7 +22,6 @@ public class eventController {
 
     @PostMapping
     public eventDTO organizeEvent(@RequestBody @Valid eventDTO eventDTO){
-        System.out.println(eventDTO.getOrganizerMail());
         return eventService.organizeEvent(eventDTO);
     }
     @PutMapping
@@ -35,6 +34,7 @@ public class eventController {
     }
     @GetMapping
     public eventDTO getEventByName(@RequestParam("name") String name){
+        System.out.println(name);
         return eventService.eventDetails(name);
     }
     @GetMapping("/count")

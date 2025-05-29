@@ -1,28 +1,19 @@
 package org.locations.eventspheremvc.controllers;
 
 import DTOs.*;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.locations.eventspheremvc.services.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,11 +106,11 @@ public class UserController {
     @GetMapping("/home")
     public String userView(Model model){
         int countEvent = userService.countSubscribedEvents(authContextProvider.getMail());
-        List<eventDTO> recentlySubscribed = userService.recentlySubscribed(authContextProvider.getMail());
+        List<eventDTO> eventsFeed = userService.subscribedEventsFeed(authContextProvider.getMail());
         List<eventDTO> incomingEvents = userService.incomingEvents(authContextProvider.getMail());
         model.addAttribute("countSub",countEvent);
         model.addAttribute("incomingEvents",incomingEvents);
-        model.addAttribute("recentEvents",recentlySubscribed);
+        model.addAttribute("eventsFeed",eventsFeed);
         return "panelView";
     }
 }

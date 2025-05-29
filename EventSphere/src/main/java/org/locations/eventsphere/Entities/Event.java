@@ -18,7 +18,6 @@ public class Event {
     @Column(unique = true,nullable = false)
     private String NAME;
     private LocalDate EVENTDATE;
-    private int TICKETCOUNT;
     private String LOCATION;
     @Column(length = 1000)
     private String DESCRIPTION;
@@ -29,10 +28,16 @@ public class Event {
     private List<EventOrganize> organizes;
     @Column(updatable = false)
     private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private EventImage eventImage;
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
+    @PreUpdate
+    protected  void onUpdate(){
+        this.modifiedAt = LocalDateTime.now();
     }
 }

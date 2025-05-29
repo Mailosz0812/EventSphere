@@ -67,4 +67,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleSubscribeProcessingException(subscribeProcessingException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+    @ExceptionHandler(NoSuchPoolException.class)
+    public ResponseEntity handleNoSuchPoolException(NoSuchPoolException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    @ExceptionHandler(EventSphereException.class)
+    public ResponseEntity handleEventSphereException(EventSphereException e){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
 }

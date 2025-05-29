@@ -16,7 +16,7 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-light">
 <div class="d-flex">
 <div class="d-flex flex-column flex-shrink-0 p-4 text-white bg-dark min-vh-100" style="width: 280px;">
     <a class="d-flex flex-column align-items-center mb-1 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -66,13 +66,13 @@
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-white mb-1">
+            <a th:href="@{/ticket}" class="nav-link text-white mb-1">
                 <i class="bi bi-ticket fs-5 me-2"></i>
                 Tickets
             </a>
         </li>
         <li>
-            <a th:href="@{/event/organize}" class="nav-link text-white mb-1">
+            <a th:href="@{/organizer}" class="nav-link text-white mb-1">
                 <i class="bi bi-plus-square fs-5 me-2"></i>
                 Organize Event
             </a>
@@ -235,17 +235,22 @@
         </div>
         <div class="ms-5 card shadow" style="width: 25rem; min-width: 320px">
             <h2 class="card-title lead p-4 border-bottom" style="font-weight: 600">
-                Recently subscribed events
+                Feed
             </h2>
-            <div th:each="event : ${recentEvents}" class="d-flex pane border-bottom p-3 align-items-center gap-5">
+            <div th:if="${!eventsFeed.isEmpty()}" th:each="event : ${eventsFeed}" class="d-flex pane border-bottom p-3 align-items-center gap-5">
                 <div class="d-flex">
                 <i class="bi bi-calendar-event fs-2 mx-1"></i>
                 <div class="ms-3">
+                    <a th:href="@{/event/details(eName = ${event.NAME})}" class="text-decoration-none text-black">
                     <h2 class="card-title mb-1 lead"  style="font-weight: 600" th:text="${event.NAME}"></h2>
                     <p class="card-text mb-0 small text-muted"  th:text="${event.EVENTDATE}"></p>
                     <p class="card-text mb-0 small text-muted" th:text="${event.LOCATION}"></p>
+                    </a>
                 </div>
                 </div>
+            </div>
+            <div th:if="${eventsFeed.isEmpty()}">
+                <p class="text-center card-title m-4 lead">No changes have been applied</p>
             </div>
         </div>
         </div>

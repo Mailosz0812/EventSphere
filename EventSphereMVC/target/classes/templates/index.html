@@ -115,10 +115,10 @@
                         </div>
                         <div>
                             <a th:href="@{/event/details(eName=${event.NAME})}" class="btn btn-outline-success mb-2">View details</a>
-                            <form th:if="${subStateMap.get(event.NAME)} == false" sec:authorize="hasRole('USER')" th:action="@{/event/subscribe(name=${event.NAME})}" method="post">
+                            <form th:if="${subStateMap.get(event.NAME)} == false" sec:authorize="hasRole('USER')" th:action="@{/subscribe(name=${event.NAME})}" method="post">
                                 <button  type="submit" class="btn btn-dark" >Subscribe</button>
                             </form>
-                            <form th:if="${subStateMap.get(event.NAME)} == true" sec:authorize="hasRole('USER')" th:action="@{/event/unsubscribe(name=${event.NAME})}" method="post">
+                            <form th:if="${subStateMap.get(event.NAME)} == true" sec:authorize="hasRole('USER')" th:action="@{/unsubscribe(name=${event.NAME})}" method="post">
                                 <button type="submit" class="btn btn-dark">Unsubscribe</button>
                             </form>
                         </div>

@@ -16,10 +16,12 @@ public class SecurityConfig {
     private String secureKey;
 
     private CustomUserDetailsService userDetailsService;
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.userDetailsService = userDetailsService;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -33,15 +35,20 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/image" ).permitAll()
                         .requestMatchers(HttpMethod.GET,"/event/details").permitAll()
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/organizer").hasRole("ORGANIZER")
+                        .requestMatchers("/event").hasAnyRole("ORGANIZER","SYS_ADMIN","ADMIN")
+                        .requestMatchers("/event/events").hasRole("ORGANIZER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll()
                 )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(customAccessDeniedHandler))
                 .rememberMe( remember -> remember
                         .key(secureKey)
-                        .tokenValiditySeconds(3600)
+                        .tokenValiditySeconds(604800)
                         .rememberMeParameter("remember"))
                 .logout(logout -> logout
                         .logoutUrl("/logout")

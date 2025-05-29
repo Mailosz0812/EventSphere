@@ -1,5 +1,6 @@
 package org.locations.eventsphere.Repositories;
 
+import lombok.extern.java.Log;
 import org.locations.eventsphere.Entities.Event;
 import org.locations.eventsphere.Entities.EventCategory;
 import org.locations.eventsphere.Entities.LoggedUser;
@@ -20,4 +21,5 @@ public interface eventRepository extends JpaRepository<Event,Long> {
     List<Event> findEventsByCreatedAtAfter(LocalDateTime time);
     List<Event> findEventsByEVENTCATEGORY(EventCategory category);
     List<Event> findEventsBy();
+
 }

@@ -17,8 +17,8 @@ public interface subscribeRepository extends JpaRepository<EventSubscribe,Long> 
     Optional<EventSubscribe> findEventSubscribeByEventAndLoggedUser(Event event, LoggedUser user);
     boolean existsEventSubscribeByEventAndLoggedUser(Event event, LoggedUser user);
     int countEventSubscribeByLoggedUser_MAIL(String mail);
-    List<EventSubscribe> findEventSubscribeBySubscribedAtAfterAndLoggedUser_MAIL(LocalDateTime time, String mail);
+    @Query("SELECT es.event FROM EventSubscribe es WHERE es.event.modifiedAt BETWEEN :min AND :max AND es.loggedUser.MAIL = :mail")
+    List<Event> findEventSubscribesByEvent_MODIFIED_ATAndLoggedUser_Mail(@Param("min") LocalDateTime min,@Param("max") LocalDateTime max,@Param("mail") String mail);
     @Query("SELECT es.event FROM EventSubscribe es WHERE es.event.EVENTDATE BETWEEN :min AND :max AND es.loggedUser.MAIL = :mail")
     List<Event> findEventSubscribesByEvent_EVENTDATEBetween(@Param("min") LocalDate min, @Param("max") LocalDate max, @Param("mail") String mail);
-
 }

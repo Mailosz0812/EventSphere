@@ -1,10 +1,14 @@
 package org.locations.eventsphere.Entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "TICKET")
+@NoArgsConstructor
 @Data
 public class Ticket {
 
@@ -24,5 +28,9 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "PAYMENTID", referencedColumnName = "PAYMENTID")
     private Payment payment;
+
+    @ManyToOne
+    @JoinColumn(name = "POOLID", referencedColumnName = "POOLID")
+    private Pool pool;
 
 }

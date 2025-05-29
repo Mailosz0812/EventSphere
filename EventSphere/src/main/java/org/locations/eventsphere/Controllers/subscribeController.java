@@ -32,9 +32,9 @@ public class subscribeController {
     public int countSubscribe(@RequestParam("mail") String mail){
         return subService.countSubscribeEvent(mail);
     }
-    @GetMapping("/recently")
-    public List<eventDTO> recentlySubscribed(@RequestParam("mail") String mail){
-        return subService.getRecentlySubscribed(mail);
+    @GetMapping("/feed")
+    public List<eventDTO> subscribedEventsFeed(@RequestParam("mail") String mail){
+        return subService.getEventsFeed(mail);
     }
     @GetMapping("/incoming")
     public List<eventDTO> incomingEvents(@RequestParam("mail") String mail){

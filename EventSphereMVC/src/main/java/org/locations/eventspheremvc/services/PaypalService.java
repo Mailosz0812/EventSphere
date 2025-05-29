@@ -22,7 +22,8 @@ public class PaypalService {
             String intent,
             String description,
             String cancelUrl,
-            String successUrl
+            String successUrl,
+            String customString
     ) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(currency);
@@ -30,6 +31,7 @@ public class PaypalService {
         Transaction transaction = new Transaction();
         transaction.setDescription(description);
         transaction.setAmount(amount);
+        transaction.setCustom(customString);
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
         Payer payer = new Payer();
@@ -54,7 +56,6 @@ public class PaypalService {
         PaymentExecution pExecution = new PaymentExecution();
         pExecution.setPayerId(payerId);
         return payment.execute(apiContext,pExecution);
-
     }
 
 }

@@ -7,9 +7,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-<div class="container py-5" layout:fragment="content">
-  <div class="row">
-    <div class="col-lg-6 mx-auto rounded border p-4">
+<div class="container d-flex p-4 justify-content-center" layout:fragment="content">
+    <div class="rounded border p-4 shadow" style="width: 50rem; height: 40rem">
       <h2 class="text-center mb-4">Event Details</h2>
       <label class="form-label">Name</label>
       <p class="mb-4" th:text="${event.NAME}"></p>
@@ -22,12 +21,11 @@
       <label class="form-label">Event Date</label>
       <p class="mb-4" th:text="${event.EVENTDATE}"></p>
       <div sec:authorize="hasRole('ORGANIZER')" class="d-flex justify-content-end">
-        <a th:href="@{/event/update(name = ${event.NAME})}" type="submit" class="btn btn-outline-primary btn me-3 ">Modify Event</a>
+        <a th:href="@{/ticket/manage(name = ${event.NAME})}" class="btn btn-outline-dark me-3">Manage tickets</a>
+        <a th:href="@{/organizer/update(name = ${event.NAME})}" type="submit" class="btn btn-outline-primary btn me-3 ">Modify Event</a>
         <a href="#" type="submit" class="btn btn-outline-dark btn">View Statistics</a>
       </div>
     </div>
-
-  </div>
 </div>
 </body>
 </html>

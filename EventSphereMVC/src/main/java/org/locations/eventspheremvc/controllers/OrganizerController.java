@@ -1,10 +1,81 @@
 package org.locations.eventspheremvc.controllers;
 
+import DTOs.categoryDTO;
+import DTOs.eventDTO;
+import DTOs.imageEventDTO;
+import jakarta.validation.Valid;
+import org.locations.eventspheremvc.services.authContextProvider;
+import org.locations.eventspheremvc.services.categoryRequestService;
+import org.locations.eventspheremvc.services.eventRequestService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/organizer")
 public class OrganizerController {
+    private final categoryRequestService categoryService;
+    private final eventRequestService eventService;
+
+    public OrganizerController(categoryRequestService categoryService, eventRequestService eventService) {
+        this.categoryService = categoryService;
+        this.eventService = eventService;
+    }
+
+    @GetMapping
+    public String organizeEventView(Model model){
+        List<categoryDTO> categories = categoryService.getCategories();
+        model.addAttribute("categories",categories);
+        model.addAttribute("event",new eventDTO());
+        return "eventForm";
+    }
+    @PostMapping
+    public String organizeEvent(Model model, @ModelAttribute @Valid eventDTO event){
+        List<categoryDTO> categories = categoryService.getCategories();
+        try{
+            String organizerMail = authContextProvider.getMail();
+            if(organizerMail == null){
+                return "errorView";
+            }
+            event.setOrganizerMail(organizerMail);
+            eventService.createEvent(event);
+            model.addAttribute("event",new eventDTO());
+            model.addAttribute("categories",categories);
+            return "eventForm";
+        }catch (HttpClientErrorException e){
+            System.out.println(e.getResponseBodyAsString());
+            model.addAttribute("event",event);
+            model.addAttribute("categories",categories);
+            model.addAttribute("response",e.getResponseBodyAsString());
+            return "eventForm";
+        }
+
+    }
+    @GetMapping("/update")
+    public String updateEventView(Model model,@RequestParam("name") String name){
+        eventDTO event = eventService.getEventDetails(name);
+        model.addAttribute("event",event);
+        model.addAttribute("iEvent",new imageEventDTO());
+        return "modifyEventView";
+    }
+    @PostMapping("/update")
+    public String updateEvent(Model model,@ModelAttribute @Valid eventDTO event){
+        try{
+            eventService.updateEvent(event);
+            return "redirect:/event?name="+event.getNAME();
+        }catch(HttpClientErrorException e){
+            model.addAttribute("iEvent",new imageEventDTO());
+            model.addAttribute("event",event);
+            model.addAttribute("response",e.getResponseBodyAsString());
+            return "modifyEventView";
+        }
+    }
+
+
+
+
 
 }

@@ -20,12 +20,10 @@ public class imageController {
     }
     @DeleteMapping
     public void deleteImage(@RequestParam("eName") String eName){
-        System.out.println(eName);
         imageService.deleteImage(eName);
     }
     @GetMapping
     public imageEventDTO getImageDTO(@RequestParam("eName") String eName){
-        System.out.println(eName);
         return imageService.getImageByEvent(eName);
     }
 }
