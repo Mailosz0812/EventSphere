@@ -17,13 +17,13 @@ public class userRegisterMapper implements Mapper<LoggedUser, userRegisterDTO> {
         this.mapper.addMappings(new PropertyMap<userRegisterDTO,LoggedUser>() {
             @Override
             protected void configure() {
-                skip(destination.getROLE());
+                skip(destination.getRole());
             }
         });
         this.mapper.addMappings(new PropertyMap<LoggedUser,userRegisterDTO>() {
             @Override
             protected void configure() {
-                skip(destination.getROLE());
+                skip(destination.getRole());
             }
         });
     }
@@ -46,7 +46,7 @@ public class userRegisterMapper implements Mapper<LoggedUser, userRegisterDTO> {
     @Override
     public userRegisterDTO mapTo(LoggedUser loggedUser) {
         userRegisterDTO user =  mapper.map(loggedUser, userRegisterDTO.class);
-        user.setROLE(loggedUser.getROLE().getNAME());
+        user.setRole(loggedUser.getRole().getNAME());
         return user;
     }
     @Override

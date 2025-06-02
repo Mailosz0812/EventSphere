@@ -1,8 +1,10 @@
 package org.locations.eventspheremvc.services;
 
 import DTOs.messageDTO;
+import jakarta.activation.DataSource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import org.locations.eventspheremvc.Exceptions.EmailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -47,5 +49,23 @@ public class EmailService {
         }catch (MessagingException e){
             throw new EmailException("Email sending failure",message);
         }
+    }
+    public void SendQrCode(String mailTo,byte[] qrCodeBytes){
+        String text = "Check your QR code image in attachment";
+        String subject = "Your ticcket is here :)";
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = null;
+        try {
+            helper = new MimeMessageHelper(message, true);
+            helper.setTo(mailTo);
+            helper.setSubject(subject);
+            helper.setText(text);
+            helper.setFrom(mail);
+            DataSource dataSource = new ByteArrayDataSource(qrCodeBytes, "image/png"); // change MIME type if needed
+            helper.addAttachment("QrCode", dataSource);
+        } catch (MessagingException e) {
+            throw new EmailException("Email sending failure",new messageDTO(mailTo,subject,"Mail with QR Code"));
+        }
+        javaMailSender.send(message);
     }
 }

@@ -1,8 +1,5 @@
 package org.locations.eventsphere.Services;
 import DTOs.eventDTO;
-import DTOs.imageEventDTO;
-import DTOs.subscribeDTO;
-import DTOs.userRegisterDTO;
 import org.locations.eventsphere.Entities.*;
 import org.locations.eventsphere.Exceptions.EventAlreadyExistsException;
 import org.locations.eventsphere.Exceptions.NoSuchCategoryException;
@@ -34,17 +31,17 @@ public class eventService {
     }
 
     public eventDTO organizeEvent(eventDTO eventDTO){
-        Optional<Event> eventOptional = eventRepo.findEventByNAME(eventDTO.getNAME());
+        Optional<Event> eventOptional = eventRepo.findEventByName(eventDTO.getNAME());
         if(eventOptional.isPresent()){
             throw new EventAlreadyExistsException("Event named: "+eventDTO.getNAME()+" already exists");
         }
-        Optional<LoggedUser> organizerOptional = userRepo.findLoggedUserByMAIL(eventDTO.getOrganizerMail());
+        Optional<LoggedUser> organizerOptional = userRepo.findLoggedUserByMail(eventDTO.getOrganizerMail());
         if(organizerOptional.isEmpty()){
             throw new NoSuchUserException("Organizer not found");
         }
         EventCategory category = checkCategory(eventDTO);
         Event newEvent = eventMapper.mapFrom(eventDTO);
-        newEvent.setEVENTCATEGORY(category);
+        newEvent.setEventCategory(category);
         eventRepo.save(newEvent);
         EventOrganize eventOrganize = new EventOrganize();
         eventOrganize.setEvent(newEvent);
@@ -63,15 +60,15 @@ public class eventService {
 
     public eventDTO updateEvent(eventDTO eventDTO){
         Event updateEvent = checkEvent(eventDTO);
-        updateEvent.setDESCRIPTION(eventDTO.getDESCRIPTION());
-        updateEvent.setEVENTDATE(eventDTO.getEVENTDATE());
-        updateEvent.setLOCATION(eventDTO.getLOCATION());
-        updateEvent.setNAME(eventDTO.getNAME());
+        updateEvent.setDescription(eventDTO.getDESCRIPTION());
+        updateEvent.setEventDate(eventDTO.getEVENTDATE());
+        updateEvent.setLocation(eventDTO.getLOCATION());
+        updateEvent.setName(eventDTO.getNAME());
         return eventMapper.mapTo(eventRepo.save(updateEvent));
     }
 
     public List<eventDTO> getEventsByOrganizer(String mail){
-        Optional<LoggedUser> optionalUser = userRepo.findLoggedUserByMAIL(mail);
+        Optional<LoggedUser> optionalUser = userRepo.findLoggedUserByMail(mail);
         if(optionalUser.isEmpty()){
             throw new NoSuchUserException("Something went wrong");
         }
@@ -79,7 +76,7 @@ public class eventService {
         return eventMapper.mapToList(eventsList);
     }
     public eventDTO eventDetails(String name){
-        Optional<Event> eventOptional = eventRepo.findEventByNAME(name);
+        Optional<Event> eventOptional = eventRepo.findEventByName(name);
         if(eventOptional.isEmpty()){
             throw new NoSuchEventException("Event not found");
         }
@@ -94,20 +91,19 @@ public class eventService {
         List<Event> events = eventRepo.findEventsByCreatedAtAfter(firstDay);
         return eventMapper.mapToList(events);
     }
-    public List<eventDTO> getEvents(){
-        List<Event> events = eventRepo.findEventsBy();
-        return eventMapper.mapToList(events);
-    }
     public List<eventDTO> getEventsByCategory(String category){
         Optional<EventCategory> optECategory = categoryRepo.findEventCategoryByNAME(category);
         if(optECategory.isEmpty()){
-            throw new NoSuchCategoryException("Category not found");
+            return eventMapper.mapToList(eventRepo.findEventsBy());
         }
-        List<Event> events = eventRepo.findEventsByEVENTCATEGORY(optECategory.get());
+        List<Event> events = eventRepo.findEventsByEventCategory(optECategory.get());
         return eventMapper.mapToList(events);
     }
+    public List<eventDTO> getEventsByName(String name){
+        return eventMapper.mapToList(eventRepo.findEventsByNameContainsIgnoreCase(name));
+    }
     private Event checkEvent(eventDTO eventDTO) {
-        Optional<Event> eventOptional = eventRepo.findEventByNAME(eventDTO.getNAME());
+        Optional<Event> eventOptional = eventRepo.findEventByName(eventDTO.getNAME());
         if (eventOptional.isEmpty()) {
             throw new NoSuchEventException("Event not found");
         }

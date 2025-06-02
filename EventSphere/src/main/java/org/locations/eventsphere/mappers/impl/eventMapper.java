@@ -24,7 +24,7 @@ public class eventMapper implements Mapper<Event, eventDTO> {
         this.mapper.addMappings(new PropertyMap<eventDTO,Event>() {
             @Override
             protected void configure() {
-                skip(destination.getEVENTCATEGORY());
+                skip(destination.getEventCategory());
                 skip(destination.getOrganizes());
             }
         });
@@ -34,7 +34,7 @@ public class eventMapper implements Mapper<Event, eventDTO> {
         List<eventDTO> eventDTOS = new ArrayList<>();
         for (Event event : aList) {
             eventDTO map = mapper.map(event, eventDTO.class);
-            map.setCATEGORY(event.getEVENTCATEGORY().getNAME());
+            map.setCATEGORY(event.getEventCategory().getNAME());
             eventDTOS.add(map);
         }
         return eventDTOS;
@@ -50,7 +50,7 @@ public class eventMapper implements Mapper<Event, eventDTO> {
     @Override
     public eventDTO mapTo(Event event) {
         eventDTO map = mapper.map(event, eventDTO.class);
-        map.setCATEGORY(event.getEVENTCATEGORY().getNAME());
+        map.setCATEGORY(event.getEventCategory().getNAME());
         return map;
     }
     @Override

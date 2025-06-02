@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class userDTO {
-    private String USERNAME;
-    private String DESCRIPTION;
-    private String MAIL;
-    private String NAME;
-    private String SURNAME;
-    private boolean NON_LOCKED;
-    private String ROLE;
-    private LocalDateTime TIMESTAMP;
+    private String username;
+    private String description;
+    private String mail;
+    private String name;
+    private String surname;
+    private boolean nonLocked;
+    private String role;
+    private LocalDateTime timestamp;
 }

@@ -14,11 +14,8 @@ import org.locations.eventsphere.Repositories.userRepository;
 import org.locations.eventsphere.mappers.Mapper;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +58,7 @@ public class subscribeService {
 
     }
     public int countSubscribeEvent(String mail){
-        return subscribeRepo.countEventSubscribeByLoggedUser_MAIL(mail);
+        return subscribeRepo.countEventSubscribeByLoggedUser_Mail(mail);
     }
     public List<eventDTO> getEventsFeed(String mail){
         LocalDateTime now = LocalDateTime.now();
@@ -76,7 +73,7 @@ public class subscribeService {
         return eventMapper.mapToList(incomingEvents);
     }
     private Optional<Event> getEvent(String name) {
-        Optional<Event> optEvent = eventRepo.findEventByNAME(name);
+        Optional<Event> optEvent = eventRepo.findEventByName(name);
         if(optEvent.isEmpty()){
             throw new NoSuchEventException("Event not found");
         }
@@ -84,7 +81,7 @@ public class subscribeService {
     }
 
     private Optional<LoggedUser> getLoggedUser(String mail) {
-        Optional<LoggedUser> optUser = userRepo.findLoggedUserByMAIL(mail);
+        Optional<LoggedUser> optUser = userRepo.findLoggedUserByMail(mail);
         if(optUser.isEmpty()){
             throw new NoSuchUserException("User not found");
         }

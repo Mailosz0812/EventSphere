@@ -22,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return userDTO.isNON_LOCKED();
+        return userDTO.isNonLocked();
     }
 
     @Override
@@ -37,16 +37,16 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+userDTO.getROLE()));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+userDTO.getRole()));
     }
 
     @Override
     public String getPassword() {
-        return userDTO.getPASSWORD();
+        return userDTO.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userDTO.getMAIL();
+        return userDTO.getMail();
     }
 }

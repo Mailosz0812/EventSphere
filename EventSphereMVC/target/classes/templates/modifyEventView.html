@@ -22,7 +22,6 @@
           <input type="date" th:field="*{EVENTDATE}" th:value="${event.EVENTDATE != null ? #temporals.format(event.EVENTDATE, 'yyyy-MM-dd') : ''}" class="form-control" id="eventDate">
           <p th:if="${errors != null and errors.containsKey('EVENTDATE')}" th:text="${errors['EVENTDATE']}" class="text-danger"></p>
         </div>
-        <input type="hidden" th:field="*{TICKETCOUNT}" th:value="${event.TICKETCOUNT}" id="ticketCount">
         <input type="hidden" th:field="*{CATEGORY}" th:value="${event.CATEGORY}" id="category">
         <input type="hidden" th:field="*{organizerMail}" th:value="${event.organizerMail}" id="mailInput">
         <div class="mb-3">

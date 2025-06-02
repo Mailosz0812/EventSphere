@@ -11,6 +11,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="SharedClasses" />
+        <module name="EventSphereREST" />
       </profile>
       <profile name="Annotation profile for EventSphereMVC" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -20,7 +21,6 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
         <module name="EventSphereMVC" />
-        <module name="EventSphereREST" />
       </profile>
     </annotationProcessing>
   </component>

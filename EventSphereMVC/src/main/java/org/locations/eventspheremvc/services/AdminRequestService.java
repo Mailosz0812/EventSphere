@@ -20,12 +20,12 @@ public class AdminRequestService {
     }
     public String adminCreateUser(preCreatedUserDTO userDTO, String role){
         userRegisterDTO user = userRegisterDTO.builder()
-                .ROLE(role)
-                .NAME("_")
-                .MAIL(userDTO.getMail())
-                .SURNAME("_")
-                .NON_LOCKED(false)
-                .USERNAME(userDTO.getUsername()).build();
+                .role(role)
+                .name("_")
+                .mail(userDTO.getMail())
+                .surname("_")
+                .nonLocked(false)
+                .username(userDTO.getUsername()).build();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<userRegisterDTO> request = new HttpEntity<>(user,headers);

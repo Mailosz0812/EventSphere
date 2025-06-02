@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface poolRepository extends JpaRepository<Pool,Long> {
-    List<Pool> findPoolsByEvent(Event event);
+    List<Pool> findPoolsByEventAndPoolStatus(Event event,String poolStatus);
     Optional<Pool> findPoolByPoolID(Long poolID);
     void deletePoolByEventAndPoolID(Event event, Long poolID);
 

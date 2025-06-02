@@ -1,6 +1,8 @@
 package org.locations.eventspheremvc.Exceptions;
 
 import DTOs.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.JsonParseException;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.locations.eventspheremvc.services.categoryRequestService;
@@ -13,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -106,5 +109,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("error",e.getMessage());
         String url = request.getHeader("Referer");
         return "redirect:"+url;
+    }
+    @ExceptionHandler(EventSphereMVCException.class)
+    public String handleEventSphereMVC(EventSphereMVCException e, Model model){
+        model.addAttribute("error",e.getMessage());
+        return "errorView";
     }
 }

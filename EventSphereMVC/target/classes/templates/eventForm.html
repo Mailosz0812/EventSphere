@@ -25,11 +25,6 @@
           <p th:if="${errors != null and errors.containsKey('EVENTDATE')}" th:text="${errors['EVENTDATE']}" class="text-danger"></p>
         </div>
         <div class="mb-3">
-          <label for="ticketCount" class="form-label">Amount of tickets</label>
-          <input type="number" th:field="*{TICKETCOUNT}" class="form-control" id="ticketCount">
-          <p th:if="${errors != null and errors.containsKey('TICKETCOUNT')}" th:text="${errors['TICKETCOUNT']}" class="text-danger"></p>
-        </div>
-        <div class="mb-3">
           <label for="location" class="form-label">Location</label>
           <input type="text" th:field="*{LOCATION}" class="form-control" id="location">
           <p th:if="${errors != null and errors.containsKey('LOCATION')}" th:text="${errors['LOCATION']}" class="text-danger"></p>

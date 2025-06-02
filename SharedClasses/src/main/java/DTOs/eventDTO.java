@@ -22,10 +22,6 @@ public class eventDTO {
     @FutureOrPresent(message = "Date must be in the future or present")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate EVENTDATE;
-    @NotNull(message = "Number of tickets must be provided")
-    @Positive(message = "Number of tickets must be positive")
-    @Digits(integer=5, fraction = 0,message = "Try smaller number")
-    private int TICKETCOUNT;
     @NotEmpty(message = "Location must be provided")
     private String LOCATION;
 //    @Size(min = 100, message = "Try larger description")

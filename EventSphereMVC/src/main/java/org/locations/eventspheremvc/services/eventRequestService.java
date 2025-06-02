@@ -1,20 +1,11 @@
 package org.locations.eventspheremvc.services;
 
 import DTOs.eventDTO;
-import DTOs.imageEventDTO;
-import DTOs.subscribeDTO;
-import DTOs.userRegisterDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -47,7 +38,7 @@ public class eventRequestService {
         return response.getBody();
     }
     public eventDTO getEventDetails(String name){
-        return restTemplate.getForObject(url +"?name={name}", eventDTO.class,name);
+        return restTemplate.getForObject(url +"/{name}", eventDTO.class,name);
     }
     public String updateEvent(eventDTO event){
         HttpHeaders headers = new HttpHeaders();
@@ -81,6 +72,18 @@ public class eventRequestService {
                 category
         );
         return events.getBody();
+    }
+    public List<eventDTO> getEventsByName(String name){
+        String apiUrl = url + "/events/{name}";
+        ResponseEntity<List<eventDTO>> events = restTemplate.exchange(
+                apiUrl,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<eventDTO>>() {},
+                name
+        );
+                return events.getBody();
+
     }
 
 }

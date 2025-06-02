@@ -132,7 +132,7 @@ public class AdminController {
     public String sendMessage(Model model,@RequestParam("username") String username){
         userDTO user = userService.getUserByUsername(username);
         messageDTO attributeValue = new messageDTO();
-        attributeValue.setTo(user.getMAIL());
+        attributeValue.setTo(user.getMail());
         model.addAttribute("message", attributeValue);
         return "sendMessageView";
     }

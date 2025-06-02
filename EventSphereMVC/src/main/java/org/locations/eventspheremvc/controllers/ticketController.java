@@ -1,19 +1,18 @@
 package org.locations.eventspheremvc.controllers;
 
-import DTOs.poolDTO;
-import DTOs.poolDetailsDTO;
-import DTOs.purchaseRequestDTO;
-import DTOs.ticketDTO;
+import DTOs.*;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
-import org.locations.eventspheremvc.services.PaypalService;
-import org.locations.eventspheremvc.services.authContextProvider;
-import org.locations.eventspheremvc.services.poolRequestService;
-import org.locations.eventspheremvc.services.ticketRequestService;
+import jakarta.servlet.http.HttpSession;
+import org.locations.eventspheremvc.Exceptions.EventSphereMVCException;
+import org.locations.eventspheremvc.services.*;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.net.URLEncoder;
@@ -25,12 +24,17 @@ import java.util.List;
 public class ticketController {
     private final ticketRequestService ticketService;
     private final poolRequestService poolService;
+    private final eventRequestService eventService;
     private final PaypalService paypalService;
+    private final EmailService emailService;
 
-    public ticketController(ticketRequestService ticketService, poolRequestService poolService, PaypalService paypalService) {
+    public ticketController(ticketRequestService ticketService, poolRequestService poolService, eventRequestService eventService,
+                            PaypalService paypalService, EmailService emailService) {
         this.ticketService = ticketService;
         this.poolService = poolService;
+        this.eventService = eventService;
         this.paypalService = paypalService;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -62,9 +66,16 @@ public class ticketController {
         model.addAttribute("pools", pools);
         return "ticketView";
     }
-
     @PostMapping("/buy")
-    public String buyTicket(@ModelAttribute purchaseRequestDTO requestDTO, RedirectAttributes attributes) {
+    public String buyTicket(@ModelAttribute purchaseRequestDTO requestDTO, RedirectAttributes attributes,Model model) {
+        if(requestDTO.getEventName() == null){
+            model.addAttribute("error","Something went wrong");
+            return "errorView";
+        }
+        if(requestDTO.getTickets() == null){
+            attributes.addAttribute("eName", requestDTO.getEventName());
+            return "redirect:/event/details";
+        }
         List<ticketDTO> tickets = requestDTO.getTickets()
                 .stream().filter(t -> t.getQuantity() != null && t.getQuantity() > 0).toList();
         String eventName = requestDTO.getEventName();
@@ -85,16 +96,24 @@ public class ticketController {
                     .append(ticket.getQuantity())
                     .append(";");
         }
+        String method = "paypal";
+        String tickInfoS = ticketInfo.toString();
+        try {
+            ticketService.validateTicketData(String.valueOf(total), authContextProvider.getMail(), method, tickInfoS, eventName);
+        }catch (HttpClientErrorException e){
+            System.out.println(e.getResponseBodyAsString());
+            throw new EventSphereMVCException("Payment interrupted");
+        }
         try {
             Payment payment = paypalService.createPayment(
                     total,
                     "PLN",
-                    "paypal",
+                    method,
                     "sale",
                     description,
                     cancelUrl,
                     successUrl,
-                    ticketInfo.toString()
+                    tickInfoS
             );
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
@@ -142,5 +161,28 @@ public class ticketController {
     @GetMapping("/payment/error")
     public String paymentError(){
         return "paymentErrorView";
+    }
+    @GetMapping("/code")
+    public ResponseEntity<byte[]> generateQrCode(@RequestParam("ticketId") Long ticketId) throws Exception{
+        ticketDetailsDTO ticketDetails = null;
+        byte[] qrCode = null;
+        try{
+            System.out.println("przyszlo");
+            ticketDetails = ticketService.getTicketDetailsById(ticketId);
+            qrCode = QrCodeGenerator.generateQRCodeImage(ticketDetails);
+        }catch (HttpClientErrorException e){
+            return ResponseEntity.ok(null);
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(qrCode);
+    }
+    @GetMapping("/code/send")
+    public String sendQrCodeViaMail(@RequestParam("ticketId") Long ticketId) throws Exception{
+        String mail = authContextProvider.getMail();
+        ticketDetailsDTO ticketDetails = ticketService.getTicketDetailsById(ticketId);
+        byte[] qrCodeBytes = QrCodeGenerator.generateQRCodeImage(ticketDetails);
+        emailService.SendQrCode(mail,qrCodeBytes);
+        return "redirect:/home/tickets";
     }
 }

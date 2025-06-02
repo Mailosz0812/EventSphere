@@ -15,32 +15,32 @@
 
         <div class="mb-3">
           <label for="InputEmail" class="form-label">Email address</label>
-          <input type="email" th:field="*{MAIL}" class="form-control" id="InputEmail">
-          <p th:if="${errors != null and errors.containsKey('MAIL')}" th:text="${errors['MAIL']}" class="text-danger"></p>
+          <input type="email" th:field="*{mail}" class="form-control" id="InputEmail">
+          <p th:if="${errors != null and errors.containsKey('mail')}" th:text="${errors['mail']}" class="text-danger"></p>
         </div>
 
         <div class="mb-3">
           <label for="nameInput" class="form-label">Name</label>
-          <input type="text" th:field="*{NAME}" class="form-control" id="nameInput">
-          <p th:if="${errors != null and errors.containsKey('NAME')}" th:text="${errors['NAME']}" class="text-danger"></p>
+          <input type="text" th:field="*{name}" class="form-control" id="nameInput">
+          <p th:if="${errors != null and errors.containsKey('name')}" th:text="${errors['name']}" class="text-danger"></p>
         </div>
 
         <div class="mb-3">
           <label for="surnameInput" class="form-label">Surname</label>
-          <input type="text" th:field="*{SURNAME}" class="form-control" id="surnameInput">
-          <p th:if="${errors != null and errors.containsKey('SURNAME')}" th:text="${errors['SURNAME']}" class="text-danger"></p>
+          <input type="text" th:field="*{surname}" class="form-control" id="surnameInput">
+          <p th:if="${errors != null and errors.containsKey('surname')}" th:text="${errors['surname']}" class="text-danger"></p>
         </div>
 
         <div class="mb-3">
           <label for="usernameInput" class="form-label">Username</label>
-          <input type="text" th:field="*{USERNAME}" class="form-control" id="usernameInput">
-          <p th:if="${errors != null and errors.containsKey('USERNAME')}" th:text="${errors['USERNAME']}" class="text-danger"></p>
+          <input type="text" th:field="*{username}" class="form-control" id="usernameInput">
+          <p th:if="${errors != null and errors.containsKey('username')}" th:text="${errors['username']}" class="text-danger"></p>
         </div>
 
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" th:field="*{PASSWORD}" class="form-control" id="exampleInputPassword1" >
-          <p th:if="${errors != null and errors.containsKey('PASSWORD')}" th:text="${errors['PASSWORD']}" class="text-danger"></p>
+          <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1" >
+          <p th:if="${errors != null and errors.containsKey('password')}" th:text="${errors['password']}" class="text-danger"></p>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>

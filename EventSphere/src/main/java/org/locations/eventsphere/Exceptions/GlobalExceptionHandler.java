@@ -1,5 +1,6 @@
 package org.locations.eventsphere.Exceptions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -69,6 +70,10 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(NoSuchPoolException.class)
     public ResponseEntity handleNoSuchPoolException(NoSuchPoolException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    @ExceptionHandler(PoolException.class)
+    public ResponseEntity handlePoolException(PoolException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
     @ExceptionHandler(EventSphereException.class)

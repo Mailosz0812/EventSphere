@@ -1,6 +1,5 @@
 package org.locations.eventsphere.Repositories;
 
-import lombok.extern.java.Log;
 import org.locations.eventsphere.Entities.Event;
 import org.locations.eventsphere.Entities.EventCategory;
 import org.locations.eventsphere.Entities.LoggedUser;
@@ -13,13 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface eventRepository extends JpaRepository<Event,Long> {
-    Optional<Event> findEventByNAME(String name);
+    Optional<Event> findEventByName(String name);
 
     @Query("SELECT eo.event FROM EventOrganize eo WHERE eo.organizer = :organizer ")
     List<Event> findEventsByOrganizer(@Param("organizer") LoggedUser organizer);
     int countEventsBy();
     List<Event> findEventsByCreatedAtAfter(LocalDateTime time);
-    List<Event> findEventsByEVENTCATEGORY(EventCategory category);
+    List<Event> findEventsByEventCategory(EventCategory category);
     List<Event> findEventsBy();
+    List<Event> findEventsByNameContainsIgnoreCase(String name);
 
 }

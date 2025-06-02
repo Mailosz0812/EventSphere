@@ -15,6 +15,8 @@ import java.util.Locale;
 public class PaypalService {
     private final APIContext apiContext;
 
+
+
     public Payment createPayment(
             Double total,
             String currency,
@@ -46,6 +48,7 @@ public class PaypalService {
         payment.setRedirectUrls(redirectUrls);
         return payment.create(apiContext);
     }
+
 
     public Payment executePayment(
             String paymentId,

@@ -42,7 +42,7 @@ public class passwordResetService {
         return mapper.mapTo(passTokenOptional.get());
     }
     public PasswordTokenDTO saveToken(PasswordTokenDTO passToken){
-        Optional<LoggedUser> user = userRepo.findLoggedUserByMAIL(passToken.getMail());
+        Optional<LoggedUser> user = userRepo.findLoggedUserByMail(passToken.getMail());
         if(user.isEmpty()){
             throw new NoSuchUserException("Invalid email");
         }

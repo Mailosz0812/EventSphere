@@ -7,7 +7,6 @@ import org.locations.eventspheremvc.services.EmailService;
 import org.locations.eventspheremvc.services.PasswordResetReqService;
 import org.locations.eventspheremvc.services.PasswordValidator;
 import org.locations.eventspheremvc.services.accountsRequestService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,8 +47,8 @@ public class PasswordResetController {
     public String setPassword(Model model, @RequestParam("newPassword") String password, @RequestParam String token, HttpServletRequest request){
         try {
             userRegisterDTO user = passRequestService.getUserByToken(token);
-            user.setPASSWORD(passwordValidator.validatePassword(user,password));
-            user.setNON_LOCKED(true);
+            user.setPassword(passwordValidator.validatePassword(user,password));
+            user.setNonLocked(true);
             accountService.updateUser(user);
             passRequestService.deleteToken(token);
             return "redirect:/login";

@@ -1,10 +1,12 @@
 package org.locations.eventsphere.Controllers;
 
+import DTOs.EventTicketsWrapper;
+import DTOs.ticketDetailsDTO;
 import DTOs.ticketPaymentDTO;
-import org.locations.eventsphere.Repositories.eventOrganizeRepository;
-import org.locations.eventsphere.Repositories.ticketRepository;
 import org.locations.eventsphere.Services.ticketService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/ticket")
@@ -23,9 +25,28 @@ public class ticketController {
     public void countTicketsByOrganizer(@RequestParam("mail") String mail){
 //        return ticketService.countTicketsByOrganizer(mail);
     }
+    @GetMapping("/user")
+    public List<EventTicketsWrapper> getTicketDetailsByUser(
+            @RequestParam("mail") String mail,
+            @RequestParam(name = "status",required = false ) String status,
+            @RequestParam(name = "date", required = false) String date,
+            @RequestParam(name = "eventPattern", required = false) String eventPattern){
+        return ticketService.getTicketsByMail(mail, status, date,eventPattern);
+    }
     @PostMapping
     public ticketPaymentDTO createTicketPayment(@RequestBody ticketPaymentDTO ticketPaymentDTO){
-        DTOs.ticketPaymentDTO ticketPayment = ticketService.createTicketPayment(ticketPaymentDTO);
-        return ticketPayment;
+        return ticketService.createTicketPayment(ticketPaymentDTO);
+    }
+    @GetMapping("/details")
+    public ticketDetailsDTO getTicketDetails(@RequestParam("ticketId") Long ticketId){
+        return ticketService.getTicketDetails(ticketId);
+    }
+    @GetMapping("/user/count/{mail}")
+    public int countUserTickets(@PathVariable("mail") String mail){
+        return ticketService.countTicketsByUser(mail);
+    }
+    @PostMapping("/check")
+    public void checkTicketData(@RequestBody ticketPaymentDTO ticketPaymentDTO){
+        ticketService.validateTicketPaymentData(ticketPaymentDTO);
     }
 }

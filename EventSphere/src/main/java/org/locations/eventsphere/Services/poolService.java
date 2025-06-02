@@ -36,7 +36,7 @@ public class poolService {
     }
     public List<poolDetailsDTO> getPools(String eName){
         Event event = getEvent(eName);
-        List<Pool> pools = poolRepo.findPoolsByEvent(event);
+        List<Pool> pools = poolRepo.findPoolsByEventAndPoolStatus(event,"ACTIVE");
         List<poolDetailsDTO> poolDetailsDTOS = new ArrayList<>();
         for (Pool pool : pools) {
             System.out.println(pool.getPoolID());
@@ -70,7 +70,7 @@ public class poolService {
         return poolMapper.mapTo(pool);
     }
     private Event getEvent(String eventName){
-        Optional<Event> optEvent = eventRepo.findEventByNAME(eventName);
+        Optional<Event> optEvent = eventRepo.findEventByName(eventName);
         if(optEvent.isEmpty()){
             throw new NoSuchEventException("Event not found");
         }

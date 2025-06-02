@@ -50,7 +50,7 @@ public class imageService {
         return iEventDTO;
     }
     private Event getEvent(String eName) {
-        Optional<Event> optEvent = eventRepo.findEventByNAME(eName);
+        Optional<Event> optEvent = eventRepo.findEventByName(eName);
         if(optEvent.isEmpty()){
             throw new NoSuchEventException("Event not found");
         }

@@ -16,33 +16,40 @@ public class LoggedUser {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 1)
-    private Long USERID;
+    @Column(name="USERID")
+    private Long userId;
 
-    @Column(unique = true,nullable = false)
-    private String NAME;
-    private String SURNAME;
+    @Column(unique = true,nullable = false,name="NAME")
+    private String name;
+    @Column(name="SURNAME")
+    private String surname;
 
-    @Column(unique = true,nullable = false)
-    private String MAIL;
+    @Column(unique = true,nullable = false,name = "MAIL")
+    private String mail;
 
     @ManyToOne
     @JoinColumn(name = "ROLEID", referencedColumnName = "ROLEID")
-    private Role ROLE;
-    private String PASSWORD;
-    private String USERNAME;
-    private String DESCRIPTION;
-    private boolean NON_LOCKED;
+    private Role role;
+
+    @Column(name = "PASSWORD")
+    private String password;
+    @Column(name="USERNAME")
+    private String username;
+    @Column(name = "DESCRIPTION")
+    private String description;
+    @Column(name = "NON_LOCKED")
+    private boolean nonLocked;
     @Column(updatable = false)
     private LocalDateTime userTimestamp;
     @PrePersist
     protected void onCreate(){
         this.userTimestamp = LocalDateTime.now();
     }
-    public LoggedUser(String NAME, String SURNAME, String MAIL,String PASSWORD, String USERNAME) {
-        this.NAME = NAME;
-        this.SURNAME = SURNAME;
-        this.MAIL = MAIL;
-        this.PASSWORD = PASSWORD;
-        this.USERNAME = USERNAME;
+    public LoggedUser(String name, String surname, String mail,String password, String username) {
+        this.name = name;
+        this.surname = surname;
+        this.mail = mail;
+        this.password = password;
+        this.username = username;
     }
 }

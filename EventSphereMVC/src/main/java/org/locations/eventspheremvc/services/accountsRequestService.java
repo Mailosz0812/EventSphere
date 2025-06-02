@@ -1,14 +1,11 @@
 package org.locations.eventspheremvc.services;
 
-import DTOs.preCreatedUserDTO;
 import DTOs.userDTO;
 import DTOs.userRegisterDTO;
-import org.locations.eventspheremvc.Exceptions.PasswordException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,9 +23,9 @@ public class accountsRequestService {
         return restTemplate.getForObject(url, userRegisterDTO.class,mail);
     }
     public String createUser(userRegisterDTO userRegisterDTO,String role){
-        userRegisterDTO.setPASSWORD(userRegisterDTO.getPASSWORD());
-        userRegisterDTO.setROLE(role);
-        userRegisterDTO.setNON_LOCKED(true);
+        userRegisterDTO.setPassword(userRegisterDTO.getPassword());
+        userRegisterDTO.setRole(role);
+        userRegisterDTO.setNonLocked(true);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<userRegisterDTO> request = new HttpEntity<>(userRegisterDTO,headers);

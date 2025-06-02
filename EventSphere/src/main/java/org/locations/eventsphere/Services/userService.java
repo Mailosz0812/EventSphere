@@ -3,10 +3,8 @@ package org.locations.eventsphere.Services;
 
 import DTOs.userDTO;
 import DTOs.userRegisterDTO;
-import org.locations.eventsphere.Entities.Event;
 import org.locations.eventsphere.Entities.LoggedUser;
 import org.locations.eventsphere.Entities.Role;
-import org.locations.eventsphere.Exceptions.NoSuchEventException;
 import org.locations.eventsphere.Exceptions.NoSuchRoleException;
 import org.locations.eventsphere.Exceptions.NoSuchUserException;
 import org.locations.eventsphere.Exceptions.UserAlreadyExistsException;
@@ -38,11 +36,11 @@ public class userService {
         this.userRegisterMapper = userRegisterMapper;
     }
     public boolean createUser(userRegisterDTO userDTO){
-        List<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUSERNAMEOrMAIL(userDTO.getUSERNAME(),userDTO.getMAIL());
+        List<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUsernameOrMail(userDTO.getUsername(),userDTO.getMail());
         if(optionalLoggedUser.isEmpty()){
             LoggedUser newUser = userRegisterMapper.mapFrom(userDTO);
-            Role role = checkRole(userDTO.getROLE());
-            newUser.setROLE(role);
+            Role role = checkRole(userDTO.getRole());
+            newUser.setRole(role);
             userRepo.save(newUser);
             return true;
         }
@@ -50,7 +48,7 @@ public class userService {
     }
     public List<userDTO> getUsersByRole(String roleString){
         Role role = checkRole(roleString);
-        List<LoggedUser> loggedUsers = userRepo.findLoggedUsersByROLE(role);
+        List<LoggedUser> loggedUsers = userRepo.findLoggedUsersByRole(role);
         return userMapper.mapToList(loggedUsers);
     }
     private Role checkRole(String roleString) {
@@ -62,64 +60,64 @@ public class userService {
     }
 
     public userDTO updateUser(userDTO userDTO){
-        Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMAIL(userDTO.getMAIL());
+        Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMail(userDTO.getMail());
         if(loggedUserOptional.isEmpty()){
             throw new NoSuchUserException("User not found");
         }
         LoggedUser updateUser = loggedUserOptional.get();
-        updateUser.setNAME(userDTO.getNAME());
-        updateUser.setSURNAME(userDTO.getSURNAME());
-        updateUser.setDESCRIPTION(userDTO.getDESCRIPTION());
+        updateUser.setName(userDTO.getName());
+        updateUser.setSurname(userDTO.getSurname());
+        updateUser.setDescription(userDTO.getDescription());
         return userMapper.mapTo(userRepo.save(updateUser));
     }
     public userRegisterDTO updateUserRegister(userRegisterDTO userDTO){
-        Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMAIL(userDTO.getMAIL());
+        Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMail(userDTO.getMail());
         if(loggedUserOptional.isEmpty()){
             throw new NoSuchUserException("User not found");
         }
         LoggedUser updateUser = loggedUserOptional.get();
-        updateUser.setNAME(userDTO.getNAME());
-        updateUser.setSURNAME(userDTO.getSURNAME());
-        updateUser.setPASSWORD(userDTO.getPASSWORD());
-        updateUser.setMAIL(userDTO.getMAIL());
-        updateUser.setUSERNAME(userDTO.getUSERNAME());
-        updateUser.setNON_LOCKED(userDTO.isNON_LOCKED());
+        updateUser.setName(userDTO.getName());
+        updateUser.setSurname(userDTO.getSurname());
+        updateUser.setPassword(userDTO.getPassword());
+        updateUser.setMail(userDTO.getMail());
+        updateUser.setUsername(userDTO.getUsername());
+        updateUser.setNonLocked(userDTO.isNonLocked());
         return userRegisterMapper.mapTo(userRepo.save(updateUser));
     }
 
     public userRegisterDTO getUserByMail(String mail){
-        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMAIL(mail);
+        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMail(mail);
         if(optionalLoggedUser.isEmpty()){
             throw new NoSuchUserException("User not found");
         }
         return userRegisterMapper.mapTo(optionalLoggedUser.get());
     }
     public userDTO getUserByUsername(String username){
-        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUSERNAME(username);
+        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUsername(username);
         if(optionalLoggedUser.isEmpty()){
             throw new NoSuchUserException("User not found");
         }
         return userMapper.mapTo(optionalLoggedUser.get());
     }
     public userDTO setBlockUser(String mail){
-        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMAIL(mail);
+        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMail(mail);
         if(optionalLoggedUser.isEmpty()){
             throw new NoSuchUserException("User not found");
         }
         LoggedUser loggedUser = optionalLoggedUser.get();
-        boolean isLocked = loggedUser.isNON_LOCKED();
-        loggedUser.setNON_LOCKED(!isLocked);
+        boolean isLocked = loggedUser.isNonLocked();
+        loggedUser.setNonLocked(!isLocked);
         return userMapper.mapTo(userRepo.save(loggedUser));
     }
     public List<userDTO> usersRegistered(){
         LocalDateTime time = LocalDateTime.now();
         LocalDateTime firstDay = time.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         System.out.println(firstDay);
-        List<LoggedUser> users = userRepo.findLoggedUsersByUSER_TIMESTAMP(firstDay);
+        List<LoggedUser> users = userRepo.findLoggedUsersByUserTimestamp(firstDay);
         return userMapper.mapToList(users);
     }
     public String usersCount(String role){
         Role eRole = checkRole(role);
-        return String.valueOf(userRepo.countLoggedUserByROLE(eRole));
+        return String.valueOf(userRepo.countLoggedUserByRole(eRole));
     }
 }

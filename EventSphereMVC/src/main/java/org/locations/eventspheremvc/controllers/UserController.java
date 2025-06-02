@@ -1,6 +1,7 @@
 package org.locations.eventspheremvc.controllers;
 
 import DTOs.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.locations.eventspheremvc.services.*;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -26,15 +27,18 @@ public class UserController {
     private final imageRequestService imageService;
     private final categoryRequestService categoryService;
     private final userRequestService userService;
+    private final ticketRequestService ticketService;
 
-    public UserController(accountsRequestService userRequestService, PasswordValidator passValid, eventRequestService eventService, imageRequestService imageService,
-                          categoryRequestService categoryService, org.locations.eventspheremvc.services.userRequestService userService) {
+    public UserController(accountsRequestService userRequestService, PasswordValidator passValid, eventRequestService eventService,
+                          imageRequestService imageService, categoryRequestService categoryService,
+                          userRequestService userService, ticketRequestService ticketService) {
         this.userRequestService = userRequestService;
         this.passValid = passValid;
         this.eventService = eventService;
         this.imageService = imageService;
         this.categoryService = categoryService;
         this.userService = userService;
+        this.ticketService = ticketService;
     }
 
     @GetMapping("/register")
@@ -46,7 +50,7 @@ public class UserController {
     @PostMapping("/register")
     public String createUser(@ModelAttribute @Valid userRegisterDTO userRegister, Model model){
         try {
-            userRegister.setPASSWORD(passValid.validatePassword(userRegister,userRegister.getPASSWORD()));
+            userRegister.setPassword(passValid.validatePassword(userRegister,userRegister.getPassword()));
             userRequestService.createUser(userRegister, "USER");
             return "redirect:/login";
         }catch (HttpClientErrorException e){
@@ -68,16 +72,15 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String guestView(Model model, @RequestParam(value = "category", required = false, defaultValue = "ALL") String category){
-        System.out.println(category);
+    public String guestView(Model model, @RequestParam(value = "category", required = false, defaultValue = "ALL") String category,@RequestParam(name="name",required = false) String name){
         List<categoryDTO> categories = null;
         List<eventDTO> events = null;
         try{
             categories = categoryService.getCategories();
         }catch (HttpClientErrorException ignored){
         }
-        if(category.equals("ALL")) {
-            events = eventService.getAllEvents();
+        if(name != null && !name.isEmpty()){
+            events = eventService.getEventsByName(name);
         }else{
             events = eventService.getEventsByCategory(category);
         }
@@ -103,14 +106,36 @@ public class UserController {
         model.addAttribute("eventList",events);
         return "index";
     }
+    @GetMapping("/home/tickets")
+    public String ticketsView(Model model, @RequestParam(name="eventPattern", required = false) String pattern,@RequestParam(name="status", required = false) String sortStatus,@RequestParam(name="date", required = false) String sortDate) throws JsonProcessingException {
+        List<EventTicketsWrapper> tickets = null;
+        if("all".equals(sortStatus)){
+            sortStatus = null;
+        }
+        if("all".equals(sortDate)){
+            sortDate = null;
+        }
+        try {
+            tickets = ticketService.getTicketsByMail(authContextProvider.getMail(),sortStatus,sortDate,pattern);
+        }catch (HttpClientErrorException e){
+            System.out.println("ingored");
+        }
+        model.addAttribute("tickets",tickets);
+        model.addAttribute("sortStatus",sortStatus);
+        model.addAttribute("sortDate",sortDate);
+         return "ticketsUserView";
+    }
     @GetMapping("/home")
     public String userView(Model model){
-        int countEvent = userService.countSubscribedEvents(authContextProvider.getMail());
-        List<eventDTO> eventsFeed = userService.subscribedEventsFeed(authContextProvider.getMail());
-        List<eventDTO> incomingEvents = userService.incomingEvents(authContextProvider.getMail());
+        String mail = authContextProvider.getMail();
+        int countEvent = userService.countSubscribedEvents(mail);
+        List<eventDTO> eventsFeed = userService.subscribedEventsFeed(mail);
+        List<eventDTO> incomingEvents = userService.incomingEvents(mail);
+        int countTickets = ticketService.countUserTickets(mail);
         model.addAttribute("countSub",countEvent);
         model.addAttribute("incomingEvents",incomingEvents);
         model.addAttribute("eventsFeed",eventsFeed);
+        model.addAttribute("ticketCount",countTickets);
         return "panelView";
     }
 }

@@ -19,7 +19,6 @@ public class eventController {
     public eventController(eventService eventService) {
         this.eventService = eventService;
     }
-
     @PostMapping
     public eventDTO organizeEvent(@RequestBody @Valid eventDTO eventDTO){
         return eventService.organizeEvent(eventDTO);
@@ -32,8 +31,8 @@ public class eventController {
     public List<eventDTO> getEvents(@RequestParam("mail") String mail){
         return eventService.getEventsByOrganizer(mail);
     }
-    @GetMapping
-    public eventDTO getEventByName(@RequestParam("name") String name){
+    @GetMapping("/{name}")
+    public eventDTO getEventByName(@PathVariable(name = "name") String name){
         System.out.println(name);
         return eventService.eventDetails(name);
     }
@@ -47,10 +46,11 @@ public class eventController {
     }
     @GetMapping("/events/all")
     public List<eventDTO> getAllEvents(@RequestParam(value = "category",required = false) String category){
-        if(category == null){
-            return eventService.getEvents();
-        }
         return eventService.getEventsByCategory(category);
+    }
+    @GetMapping("/events/{name}")
+    public List<eventDTO> getEventsByName(@PathVariable("name") String name){
+        return eventService.getEventsByName(name);
     }
 
 }

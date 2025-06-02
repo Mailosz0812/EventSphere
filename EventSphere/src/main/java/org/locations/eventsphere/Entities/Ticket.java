@@ -15,7 +15,8 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ticket_seq")
     @SequenceGenerator(name = "ticket_seq", sequenceName = "TICKET_SEQ", allocationSize = 1)
-    private Long TICKETID;
+    @Column(name = "TICKETID")
+    private Long ticketId;
 
     @ManyToOne
     @JoinColumn(name = "EVENTID", referencedColumnName = "EVENTID")
@@ -32,5 +33,6 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "POOLID", referencedColumnName = "POOLID")
     private Pool pool;
-
+    @Column(name = "TICKET_STATUS")
+    private String ticketStatus;
 }

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{panelView}">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Tickets - Event Sphere</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<div layout:fragment="content" class="container justify-content-center">
+  <!-- Nagłówek strony -->
+  <div class="d-flex justify-content-center align-items-center p-2">
+    <h1 class="h2" id="ticketsPageHeading">My Tickets</h1>
+  </div>
+  <!-- Filtry i wyszukiwanie -->
+  <div class="row mb-4 g-3 align-items-end" aria-label="Ticket filters">
+    <form method="get" th:action="@{/home/tickets}" class="col-md-7 d-flex gap-3 align-items-end">
+      <div class="flex-grow-1">
+        <label for="searchTickets" class="form-label">Search tickets</label>
+        <div class="input-group">
+      <span class="input-group-text" id="searchIcon">
+        <i class="bi bi-search"></i>
+      </span>
+          <input type="text" name="eventPattern" class="form-control" id="searchTickets"
+                 placeholder="Search by event" aria-label="Search tickets"
+                 aria-describedby="searchIcon" onchange="this.form.submit()">
+        </div>
+      </div>
+      <!-- Filtr statusu -->
+      <div class="flex-grow-1">
+        <label for="statusFilter" class="form-label">Filter by status</label>
+        <select name="status" class="form-select" id="statusFilter" onchange="this.form.submit()">
+          <option value="all" th:selected="${sortStatus == null}">All Statuses</option>
+          <option value="active" th:selected="${sortStatus == 'active'}">Active</option>
+          <option value="used" th:selected="${sortStatus == 'used'}">Used</option>
+        </select>
+      </div>
+
+      <!-- Sortowanie po dacie -->
+      <div class="flex-grow-1">
+        <label for="dateFilter" class="form-label">Sort by date</label>
+        <select name="date" class="form-select" id="dateFilter" onchange="this.form.submit()">
+          <option value="desc" th:selected="${sortDate == 'desc'}">Newest First</option>
+          <option value="asc" th:selected="${sortDate == 'asc'}">Oldest First</option>
+          <option value="all" th:selected="${sortDate == null}">Event Date</option>
+        </select>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista biletów -->
+  <div role="region" aria-labelledby="ticketsPageHeading">
+    <!-- Stan gdy brak biletów -->
+    <div th:if="${tickets.isEmpty()}" class="text-center py-5 empty-state">
+      <i class="bi bi-ticket-perforated display-4 text-muted mb-3"></i>
+      <h2 class="h4">No tickets found</h2>
+      <p class="text-muted">You haven't purchased any tickets yet.</p>
+      <a th:href="@{/}" class="btn btn-success mt-3">Browse Events</a>
+    </div>
+    <!-- Lista biletów -->
+    <div class="accordion" id="ticketsAccordion" >
+      <div class="accordion-item mb-3 p-3 rounded overflow-hidden"
+           th:each="wrapper : ${tickets}"
+           th:with="event=${wrapper.eventDetails}, ticketVar=${wrapper.tickets[0]}"
+           th:attr="data-status=${ticketVar.ticketID}">
+        <div class="accordion-header">
+          <button class="accordion-button p-0 bg-white collapsed" type="button"
+                  th:data-bs-target="'#collapse' + ${ticketVar.ticketID}"
+                  data-bs-toggle="collapse"
+                  th:attr="aria-controls='collapse' + ${ticketVar.ticketID}">
+            <div class="card ticket-card w-100 border-0">
+              <div class="card-body position-relative">
+          <span class="badge status-badge position-absolute"
+                th:classappend="' bg-' + (${ticketVar.ticketStatus} == 'active' ? 'success' : (${ticketVar.ticketStatus} == 'used' ? 'secondary' : 'danger'))"
+                th:text="${ticketVar.ticketStatus}">
+          </span>
+                <div class="row align-items-center">
+                  <div class="col-md-3 col-lg-2 mb-3 mb-md-0 text-center">
+                    <div class="bg-light rounded p-3">
+                      <div class="fw-bold" th:text="${#temporals.format(event.eventDate, 'MMM')}"></div>
+                      <div class="display-6 fw-bold" th:text="${#temporals.format(event.eventDate, 'dd')}"></div>
+                      <div th:text="${#temporals.format(event.eventDate, 'yyyy')}"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-5 mb-3 mb-md-0">
+                    <h3 class="h5 mb-1" th:text="${event.name}"></h3>
+                    <div class="text-muted">
+                      <i class="bi bi-geo-alt me-1"></i>
+                      <span th:text="${event.location}"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="d-flex">
+                      <div>
+                        <div class="text-muted small">Price</div>
+                        <div th:text="${ticketVar.poolPrice} + ' PLN'"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 text-md-end">
+                    <div class="text-muted small">Tickets</div>
+                    <div class="fw-bold" th:text="${ticketVar.quantity} + ' x ' + ${ticketVar.ticketType}"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div th:id="'collapse' + ${ticketVar.ticketID}" class="accordion-collapse collapse">
+          <div class="accordion-body bg-light">
+            <div class="row">
+              <div class="col-md-8">
+                <h4 class="h6 mb-3">Ticket Details</h4>
+                <div class="row">
+                  <div class="col-sm-6 mb-3">
+                    <div class="fw-bold">Purchased On</div>
+                    <div th:text="${#temporals.format(ticketVar.purchaseDate, 'dd MMM yyyy HH:mm')}"></div>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <div class="fw-bold">Order Total</div>
+                    <div th:text="${ticketVar.price}"></div>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <div class="fw-bold">Ticket ID</div>
+                    <div th:text="${ticketVar.ticketID}"></div>
+                  </div>
+                </div>
+
+                <div th:if="${ticketVar.ticketStatus == 'ACTIVE'}">
+                  <div class="alert alert-success d-flex align-items-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <div>This ticket is waiting for event</div>
+                  </div>
+                </div>
+                <div th:if="${ticketVar.ticketStatus == 'USED'}">
+                  <div class="alert alert-secondary d-flex align-items-center">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <div>This ticket was used already</div>
+                  </div>
+                </div>
+              </div>
+              <div th:if="${ticketVar.ticketStatus}" class="col-md-4 ticket-actions">
+                <div class="d-flex flex-column align-items-center gap-3">
+
+                  <!-- QR code image -->
+                  <img th:src="@{/ticket/code(ticketId=${ticketVar.ticketID})}"
+                       alt="QR Code"
+                       class="img-fluid border rounded"
+                       style="max-width: 200px;" />
+                  <!-- Send via mail button -->
+                  <a th:href="@{/ticket/code/send(ticketId=${ticketVar.ticketID})}" class="btn btn-dark">
+                    <i class="bi bi-envelope me-2"></i>Send Via Mail</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
