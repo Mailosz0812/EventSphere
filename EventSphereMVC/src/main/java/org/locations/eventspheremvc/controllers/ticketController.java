@@ -24,28 +24,15 @@ import java.util.List;
 public class ticketController {
     private final ticketRequestService ticketService;
     private final poolRequestService poolService;
-    private final eventRequestService eventService;
     private final PaypalService paypalService;
     private final EmailService emailService;
 
-    public ticketController(ticketRequestService ticketService, poolRequestService poolService, eventRequestService eventService,
+    public ticketController(ticketRequestService ticketService, poolRequestService poolService,
                             PaypalService paypalService, EmailService emailService) {
         this.ticketService = ticketService;
         this.poolService = poolService;
-        this.eventService = eventService;
         this.paypalService = paypalService;
         this.emailService = emailService;
-    }
-
-    @GetMapping
-    public String ticketsSummaryView(Model model) {
-        String mail = authContextProvider.getMail();
-//        Integer count = ticketService.countTickets(mail);
-//        Integer sold = ticketService.countSoldTickets(mail);
-//        Integer left = count - sold;
-//        model.addAttribute("left",left);
-//        model.addAttribute("sold",sold);
-        return "ticketsView";
     }
 
     @GetMapping("/manage")
@@ -54,6 +41,9 @@ public class ticketController {
                                    @RequestParam(name = "poolID", required = false) Long poolID,
                                    Model model) {
         List<poolDetailsDTO> pools = poolService.getPools(eName);
+        for (poolDetailsDTO pool : pools) {
+            System.out.println(pool.getPoolType());
+        }
         model.addAttribute("formAction", editMode ? "/pool/update" : "/pool");
         model.addAttribute("editMode", editMode);
         if (editMode) {

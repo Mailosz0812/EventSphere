@@ -2,6 +2,7 @@ package org.locations.eventsphere.Controllers;
 
 import DTOs.poolDTO;
 import DTOs.poolDetailsDTO;
+import jakarta.websocket.server.PathParam;
 import org.locations.eventsphere.Services.poolService;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +30,9 @@ public class poolController {
     public List<poolDetailsDTO> getPoolsByEvent(@RequestParam("name") String eName){
         return poolService.getPools(eName);
     }
-    @DeleteMapping
-    public void deletePool(@RequestParam("poolID") Long poolID,@RequestParam("eventName") String eventName){
-        poolService.deletePool(eventName,poolID);
+    @DeleteMapping("/{poolID}")
+    public void deletePool(@PathVariable("poolID") Long poolID){
+        poolService.deletePool(poolID);
     }
     @PutMapping
     public void updatePool(@RequestBody poolDTO poolDTO){

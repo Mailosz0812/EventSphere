@@ -34,6 +34,8 @@ public class Event {
     private LocalDateTime modifiedAt;
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private EventImage eventImage;
+    @Column(name = "EVENT_STATUS")
+    private String eventStatus;
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();

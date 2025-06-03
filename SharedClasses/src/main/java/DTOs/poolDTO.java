@@ -18,7 +18,7 @@ public class poolDTO {
     @NotEmpty(message = "Pool name must be provided")
     private String poolType;
     @NotNull(message = "Price must be provided")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @DecimalMin(value = "0.0", message = "Price must be greater than or equal 0")
     private Double price;
     @NotNull(message = "Amount of tickets must be provided")
     @DecimalMin(value = "0.0", message = "Amount of tickets must be greater than 0")

@@ -62,8 +62,8 @@ public class subscribeService {
     }
     public List<eventDTO> getEventsFeed(String mail){
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime max = now.minusWeeks(2);
-        List<Event> eventsFeed = subscribeRepo.findEventSubscribesByEvent_MODIFIED_ATAndLoggedUser_Mail(max,now,mail);
+        LocalDateTime max = now.minusWeeks(1);
+        List<Event> eventsFeed = subscribeRepo.findEventSubscribesByEvent_MODIFIED_ATAndLoggedUser_MailAndEvent_EventStatus(max,now,mail,"ACTIVE");
         return eventMapper.mapToList(eventsFeed);
     }
     public List<eventDTO> getIncomingEvents(String mail){

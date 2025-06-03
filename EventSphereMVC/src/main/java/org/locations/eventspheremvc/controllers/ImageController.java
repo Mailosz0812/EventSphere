@@ -28,6 +28,13 @@ public class ImageController {
 
     @PostMapping("/update")
     public String uploadImage(Model model, @ModelAttribute @Valid imageEventDTO iEventDTO, @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        if(multipartFile.isEmpty()){
+            model.addAttribute("iResponse","File is empty");
+            eventDTO event = eventService.getEventDetails(iEventDTO.getEName());
+            model.addAttribute("event",event);
+            model.addAttribute("iEvent",iEventDTO);
+            return "modifyEventView";
+        }
         try {
             imageService.uploadImage(multipartFile, iEventDTO);
             return "redirect:/event?name="+iEventDTO.getEName();
@@ -36,8 +43,8 @@ public class ImageController {
             model.addAttribute("event",event);
             model.addAttribute("iEvent",iEventDTO);
             model.addAttribute("iResponse",e.getResponseBodyAsString());
-            return "modifyEventView";
         }
+        return "modifyEventView";
     }
     @PostMapping("/delete")
     public String deleteImage(@RequestParam("eName") String eName,Model model){

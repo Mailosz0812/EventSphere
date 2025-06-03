@@ -1,9 +1,6 @@
 package org.locations.eventsphere.Services;
 
-import DTOs.EventTicketsWrapper;
-import DTOs.eventDetailsDTO;
-import DTOs.ticketDetailsDTO;
-import DTOs.ticketPaymentDTO;
+import DTOs.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
@@ -188,19 +185,25 @@ public class ticketService {
     }
     public int countSoldTicketsByOrganizer(String mail){
         LoggedUser organizer = getLoggedUser(mail);
-        Integer ticketCount = ticketRepo.countTicketsByEventOrganizer(organizer);
+        Long ticketCount = ticketRepo.countSoldTicketsByOrganizerMail(mail);
         if(ticketCount == null){
             return 0;
         }
-        return ticketCount;
+        return ticketCount.intValue();
     }
-    public void countTicketsByOrganizer(String mail){
+    public int countTicketsByOrganizer(String mail){
         LoggedUser organizer = getLoggedUser(mail);
-//        Integer ticketCount = eventOrganizeRepo.sumEventTicketsByOrganizerMail(organizer);
-//        if(ticketCount == null){
-//            return 0;
-//        }
-//        return ticketCount;
+        int ticketsCount = 0;
+        Long ticketCount = ticketRepo.countSoldTicketsByOrganizerMail(mail);
+        if(ticketCount != null){
+            ticketsCount = ticketCount.intValue();
+        }
+        ticketsCount = 0;
+        ticketCount = poolRepo.sumTicketCountByOrganizerMail(mail);
+        if(ticketCount != null){
+            ticketsCount += ticketCount.intValue();
+        }
+        return ticketsCount;
     }
     public int countTicketsByUser(String mail){
         Integer count = ticketRepo.countTicketsByUser_Mail(mail);
@@ -220,7 +223,20 @@ public class ticketService {
         detailsDTO.setPurchaseDate(ticket.getPayment().getPaymentTimestamp().toLocalDate());
         return detailsDTO;
     }
-
+    public List<ticketsStatsDTO> getTicketsStats(String mail){
+        LoggedUser user = getLoggedUser(mail);
+        List<Event> events = eventRepo.findEventsByOrganizerAndEventStatus(user,"ACTIVE");
+        List<ticketsStatsDTO> statsList = new ArrayList<>();
+        for (Event event : events) {
+            Integer countSold = ticketRepo.countTicketsByEvent(event);
+            ticketsStatsDTO stats = new ticketsStatsDTO();
+            stats.setTicketsSold(countSold);
+            stats.setEventName(event.getName());
+            stats.setChart(ticketRepo.getTicketStatsByEvent(event));
+            statsList.add(stats);
+        }
+        return statsList;
+    }
     private LoggedUser getLoggedUser(String mail) {
         Optional<LoggedUser> optOrganizer = userRepo.findLoggedUserByMail(mail);
         if(optOrganizer.isEmpty()){

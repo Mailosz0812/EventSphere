@@ -80,4 +80,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleEventSphereException(EventSphereException e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+    @ExceptionHandler(EventException.class)
+    public ResponseEntity handleEventException(EventException e){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+    }
 }

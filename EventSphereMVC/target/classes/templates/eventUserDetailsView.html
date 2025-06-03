@@ -53,7 +53,7 @@
                     <button type="submit" class="btn btn-dark">Unsubscribe</button>
                 </form>
                 <div class="mt-4">
-                    <div th:if="${pools.isEmpty()}" class="alert alert-secondary text-center" role="alert">
+                    <div th:if="${pools.isEmpty()}" sec:authorize="hasRole('USER')" class="alert alert-secondary text-center" role="alert">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         All tickets for this event are sold out!
                     </div>

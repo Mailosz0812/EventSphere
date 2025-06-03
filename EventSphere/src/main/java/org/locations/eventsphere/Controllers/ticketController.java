@@ -3,6 +3,7 @@ package org.locations.eventsphere.Controllers;
 import DTOs.EventTicketsWrapper;
 import DTOs.ticketDetailsDTO;
 import DTOs.ticketPaymentDTO;
+import DTOs.ticketsStatsDTO;
 import org.locations.eventsphere.Services.ticketService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +18,13 @@ public class ticketController {
         this.ticketService = ticketService;
     }
 
-    @GetMapping("/sold")
-    public int countSoldTicketsByOrganizer(@RequestParam("mail") String mail){
+    @GetMapping("/sold/{mail}")
+    public int countSoldTicketsByOrganizer(@PathVariable("mail") String mail){
         return ticketService.countSoldTicketsByOrganizer(mail);
     }
-    @GetMapping("/all")
-    public void countTicketsByOrganizer(@RequestParam("mail") String mail){
-//        return ticketService.countTicketsByOrganizer(mail);
+    @GetMapping("/all/{mail}")
+    public Integer countTicketsByOrganizer(@PathVariable("mail") String mail){
+        return ticketService.countTicketsByOrganizer(mail);
     }
     @GetMapping("/user")
     public List<EventTicketsWrapper> getTicketDetailsByUser(
@@ -48,5 +49,11 @@ public class ticketController {
     @PostMapping("/check")
     public void checkTicketData(@RequestBody ticketPaymentDTO ticketPaymentDTO){
         ticketService.validateTicketPaymentData(ticketPaymentDTO);
+    }
+
+//    Dopisz metode w serwisie do generowania statystyk
+    @GetMapping("/stats/{mail}")
+    public List<ticketsStatsDTO> getTicketsStats(@PathVariable("mail")String mail){
+        return ticketService.getTicketsStats(mail);
     }
 }

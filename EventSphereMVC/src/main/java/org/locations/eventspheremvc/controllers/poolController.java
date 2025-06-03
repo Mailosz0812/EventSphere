@@ -3,11 +3,13 @@ package org.locations.eventspheremvc.controllers;
 import DTOs.poolDTO;
 import DTOs.poolDetailsDTO;
 import jakarta.validation.Valid;
+import org.locations.eventspheremvc.services.eventRequestService;
 import org.locations.eventspheremvc.services.poolRequestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -15,9 +17,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/pool")
 public class poolController {
-    private poolRequestService poolService;
+    private final poolRequestService poolService;
+    private final eventRequestService eventService;
 
-    public poolController(poolRequestService poolService) {
+    public poolController(eventRequestService eventService, poolRequestService poolService) {
+        this.eventService = eventService;
         this.poolService = poolService;
     }
 
@@ -43,8 +47,19 @@ public class poolController {
         }
     }
     @PostMapping("/delete")
-    public String deletePool(@RequestParam("poolID") Long poolID, @RequestParam("name") String name){
-        poolService.deletePool(poolID,name);
+    public String deletePool(@RequestParam("poolID") Long poolID, @RequestParam("name") String name, RedirectAttributes attributes,Model model){
+        try{
+            eventService.getEventDetails(name);
+        }catch (HttpClientErrorException e){
+            model.addAttribute("error",e.getResponseBodyAsString());
+            return "errorView";
+        }
+        try {
+            poolService.deletePool(poolID);
+        }catch (HttpClientErrorException e){
+            System.out.println("cos");
+            attributes.addFlashAttribute("response",e.getResponseBodyAsString());
+        }
         return "redirect:/ticket/manage?name="+name;
     }
     @PostMapping("/update")

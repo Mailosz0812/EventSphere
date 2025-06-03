@@ -31,7 +31,7 @@ public class eventService {
     }
 
     public eventDTO organizeEvent(eventDTO eventDTO){
-        Optional<Event> eventOptional = eventRepo.findEventByName(eventDTO.getNAME());
+        Optional<Event> eventOptional = eventRepo.findEventByNameAndEventStatus(eventDTO.getNAME(),"ACTIVE");
         if(eventOptional.isPresent()){
             throw new EventAlreadyExistsException("Event named: "+eventDTO.getNAME()+" already exists");
         }
@@ -41,6 +41,7 @@ public class eventService {
         }
         EventCategory category = checkCategory(eventDTO);
         Event newEvent = eventMapper.mapFrom(eventDTO);
+        newEvent.setEventStatus("ACTIVE");
         newEvent.setEventCategory(category);
         eventRepo.save(newEvent);
         EventOrganize eventOrganize = new EventOrganize();
@@ -72,7 +73,7 @@ public class eventService {
         if(optionalUser.isEmpty()){
             throw new NoSuchUserException("Something went wrong");
         }
-        List<Event> eventsList = eventRepo.findEventsByOrganizer(optionalUser.get());
+        List<Event> eventsList = eventRepo.findEventsByOrganizerAndEventStatus(optionalUser.get(),"ACTIVE");
         return eventMapper.mapToList(eventsList);
     }
     public eventDTO eventDetails(String name){
@@ -83,7 +84,7 @@ public class eventService {
         return eventMapper.mapTo(eventOptional.get());
     }
     public String countEvents(){
-        return String.valueOf(eventRepo.countEventsBy());
+        return String.valueOf(eventRepo.countEventsByEventStatus("ACTIVE"));
     }
     public List<eventDTO> getRecentEvents(){
         LocalDateTime now = LocalDateTime.now();
@@ -94,16 +95,16 @@ public class eventService {
     public List<eventDTO> getEventsByCategory(String category){
         Optional<EventCategory> optECategory = categoryRepo.findEventCategoryByNAME(category);
         if(optECategory.isEmpty()){
-            return eventMapper.mapToList(eventRepo.findEventsBy());
+            return eventMapper.mapToList(eventRepo.findEventsByEventStatus("ACTIVE"));
         }
-        List<Event> events = eventRepo.findEventsByEventCategory(optECategory.get());
+        List<Event> events = eventRepo.findEventsByEventCategoryAndEventStatus(optECategory.get(),"ACTIVE");
         return eventMapper.mapToList(events);
     }
     public List<eventDTO> getEventsByName(String name){
-        return eventMapper.mapToList(eventRepo.findEventsByNameContainsIgnoreCase(name));
+        return eventMapper.mapToList(eventRepo.findEventsByNameContainsIgnoreCaseAndEventStatus(name,"ACTIVE"));
     }
     private Event checkEvent(eventDTO eventDTO) {
-        Optional<Event> eventOptional = eventRepo.findEventByName(eventDTO.getNAME());
+        Optional<Event> eventOptional = eventRepo.findEventByNameAndEventStatus(eventDTO.getNAME(),"ACTIVE");
         if (eventOptional.isEmpty()) {
             throw new NoSuchEventException("Event not found");
         }

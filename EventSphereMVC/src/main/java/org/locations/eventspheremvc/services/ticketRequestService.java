@@ -43,11 +43,11 @@ public class ticketRequestService {
                 userMail,sortStatus,sortDate,eventPattern).getBody();
     }
     public Integer countSoldTickets(String mail){
-        String apiUrl = url + "/sold?mail={mail}";
+        String apiUrl = url + "/sold/{mail}";
         return restTemplate.getForObject(apiUrl, Integer.class,mail);
     }
     public Integer countTickets(String mail){
-        String apiUrl = url + "/all?mail={mail}";
+        String apiUrl = url + "/all/{mail}";
         return restTemplate.getForObject(apiUrl,Integer.class,mail);
     }
     public ticketDetailsDTO getTicketDetailsById(Long ticketId){
@@ -68,5 +68,14 @@ public class ticketRequestService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ticketPaymentDTO> request = new HttpEntity<>(ticketPaymentDTO,headers);
         restTemplate.postForObject(url+"/check",request,DTOs.ticketPaymentDTO.class);
+    }
+    public List<ticketsStatsDTO> getTicketsStats(String mail){
+        String apiUrl = url + "/stats/{mail}";
+        return restTemplate.exchange(
+                apiUrl,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<ticketsStatsDTO>>() {},
+                mail).getBody();
     }
 }

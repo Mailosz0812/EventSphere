@@ -1,5 +1,6 @@
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\categoryDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\commentDTO.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\dailySalesDetails.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\eventCreationDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\eventDetailsDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\eventDTO.java
@@ -15,5 +16,6 @@ C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\su
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\ticketDetailsDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\ticketDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\ticketPaymentDTO.java
+C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\ticketsStatsDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\userDTO.java
 C:\Users\Czarny\IdeaProjects\EventSphereProj\SharedClasses\src\main\java\DTOs\userRegisterDTO.java

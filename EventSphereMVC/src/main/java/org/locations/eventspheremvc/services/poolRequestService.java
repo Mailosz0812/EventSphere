@@ -33,13 +33,13 @@ public class poolRequestService {
                 new ParameterizedTypeReference<List<poolDetailsDTO>>() {},
                 name).getBody();
     }
-    public void deletePool(Long poolID,String eventName){
-        String apiUrl = url + "?poolID={poolID}&eventName={eventName}";
+    public void deletePool(Long poolID){
+        String apiUrl = url + "/{poolID}";
         restTemplate.exchange(apiUrl,
                 HttpMethod.DELETE,
                 null,
                 new ParameterizedTypeReference<Void>() {},
-                poolID, eventName);
+                poolID);
     }
     public void updatePool(poolDTO poolDTO){;
         HttpHeaders headers = new HttpHeaders();

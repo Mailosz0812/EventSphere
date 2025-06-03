@@ -12,21 +12,21 @@
     <div class="col-lg-6 mx-auto rounded border p-4">
       <h2 class="text-center mb-4">User Details</h2>
       <label class="form-label">E-Mail:</label>
-      <p class="mb-4" th:text="${user.MAIL}"></p>
+      <p class="mb-4" th:text="${user.mail}"></p>
       <label class="form-label">Username:</label>
-      <p class="mb-4" th:text="${user.USERNAME}"></p>
+      <p class="mb-4" th:text="${user.username}"></p>
       <label class="form-label">Name:</label>
-      <p class="mb-4" th:text="${user.NAME}"></p>
+      <p class="mb-4" th:text="${user.name}"></p>
       <label class="form-label">Surname:</label>
-      <p class="mb-4" th:text="${user.SURNAME}"></p>
+      <p class="mb-4" th:text="${user.surname}"></p>
       <label class="form-label">Description:</label>
-      <p class="mb-4" th:text="${user.DESCRIPTION}"></p>
+      <p class="mb-4" th:text="${user.description}"></p>
       <div class="d-flex justify-content-end">
         <form th:action="@{/admin/block}" method="post">
-          <input type="hidden" name="mail" th:value="${user.MAIL}" />
-          <button type="submit" th:text="${user.NON_LOCKED == true} ? 'Block' : 'Unblock'" class="me-2 btn btn-outline-danger btn"></button>
+          <input type="hidden" name="mail" th:value="${user.mail}" />
+          <button type="submit" th:text="${user.nonLocked == true} ? 'Block' : 'Unblock'" class="me-2 btn btn-outline-danger btn"></button>
         </form>
-        <a th:href="@{/admin/message(username=${user.USERNAME})}" type="submit" class="btn btn-outline-primary btn">Send Message</a>
+        <a th:href="@{/admin/message(username=${user.username})}" type="submit" class="btn btn-outline-primary btn">Send Message</a>
       </div>
     </div>
   </div>

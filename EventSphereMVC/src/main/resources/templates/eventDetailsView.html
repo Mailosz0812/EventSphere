@@ -23,7 +23,6 @@
       <div sec:authorize="hasRole('ORGANIZER')" class="d-flex justify-content-end">
         <a th:href="@{/ticket/manage(name = ${event.NAME})}" class="btn btn-outline-dark me-3">Manage tickets</a>
         <a th:href="@{/organizer/update(name = ${event.NAME})}" type="submit" class="btn btn-outline-primary btn me-3 ">Modify Event</a>
-        <a href="#" type="submit" class="btn btn-outline-dark btn">View Statistics</a>
       </div>
     </div>
 </div>

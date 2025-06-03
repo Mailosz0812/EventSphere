@@ -1,12 +1,11 @@
 package org.locations.eventspheremvc.controllers;
 
-import DTOs.categoryDTO;
-import DTOs.eventDTO;
-import DTOs.imageEventDTO;
+import DTOs.*;
 import jakarta.validation.Valid;
 import org.locations.eventspheremvc.services.authContextProvider;
 import org.locations.eventspheremvc.services.categoryRequestService;
 import org.locations.eventspheremvc.services.eventRequestService;
+import org.locations.eventspheremvc.services.ticketRequestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +18,27 @@ import java.util.List;
 public class OrganizerController {
     private final categoryRequestService categoryService;
     private final eventRequestService eventService;
+    private final ticketRequestService ticketService;
 
-    public OrganizerController(categoryRequestService categoryService, eventRequestService eventService) {
+    public OrganizerController(categoryRequestService categoryService, eventRequestService eventService, ticketRequestService ticketService) {
         this.categoryService = categoryService;
         this.eventService = eventService;
+        this.ticketService = ticketService;
     }
 
     @GetMapping
+    public String ticketsSummaryView(Model model) {
+        String mail = authContextProvider.getMail();
+        Integer count = ticketService.countTickets(mail);
+        Integer sold = ticketService.countSoldTickets(mail);
+        List<ticketsStatsDTO> ticketsStats = ticketService.getTicketsStats(mail);
+        Integer left = count - sold;
+        model.addAttribute("left",left);
+        model.addAttribute("sold",sold);
+        model.addAttribute("events",ticketsStats);
+        return "panelView";
+    }
+    @GetMapping("/organize")
     public String organizeEventView(Model model){
         List<categoryDTO> categories = categoryService.getCategories();
         model.addAttribute("categories",categories);

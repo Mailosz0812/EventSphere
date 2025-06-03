@@ -5,10 +5,13 @@ import DTOs.poolDetailsDTO;
 import jakarta.transaction.Transactional;
 import org.locations.eventsphere.Entities.Event;
 import org.locations.eventsphere.Entities.Pool;
+import org.locations.eventsphere.Exceptions.EventException;
 import org.locations.eventsphere.Exceptions.NoSuchEventException;
 import org.locations.eventsphere.Exceptions.NoSuchPoolException;
+import org.locations.eventsphere.Exceptions.PoolException;
 import org.locations.eventsphere.Repositories.eventRepository;
 import org.locations.eventsphere.Repositories.poolRepository;
+import org.locations.eventsphere.Repositories.ticketRepository;
 import org.locations.eventsphere.mappers.Mapper;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +24,21 @@ public class poolService {
     private final poolRepository poolRepo;
     private final eventRepository eventRepo;
     private final Mapper<Pool,poolDTO> poolMapper;
+    private final ticketRepository ticketRepo;
 
-    public poolService(poolRepository poolRepo, eventRepository eventRepo, Mapper<Pool, poolDTO> poolMapper) {
+    public poolService(poolRepository poolRepo, eventRepository eventRepo, Mapper<Pool, poolDTO> poolMapper, ticketRepository ticketRepo) {
         this.poolRepo = poolRepo;
         this.eventRepo = eventRepo;
         this.poolMapper = poolMapper;
+        this.ticketRepo = ticketRepo;
     }
-
     public poolDTO createPool(poolDTO poolDTO){
         Event event = getEvent(poolDTO.getEventName());
+        if("DONE".equals(event.getEventStatus())){
+            throw new EventException("Event is already performed");
+        }
         Pool pool = poolMapper.mapFrom(poolDTO);
+        pool.setPoolStatus("ACTIVE");
         pool.setEvent(event);
         return poolMapper.mapTo(poolRepo.save(pool));
     }
@@ -39,26 +47,34 @@ public class poolService {
         List<Pool> pools = poolRepo.findPoolsByEventAndPoolStatus(event,"ACTIVE");
         List<poolDetailsDTO> poolDetailsDTOS = new ArrayList<>();
         for (Pool pool : pools) {
-            System.out.println(pool.getPoolID());
+            Long poolID = pool.getPoolID();
+            Integer count = ticketRepo.countTicketsByPoolPoolID(poolID);
+            int ticketCount = pool.getTicketCount() + count;
             poolDetailsDTOS.add(new poolDetailsDTO(
-                    pool.getPoolID(),
+                    poolID,
                     pool.getPoolName(),
                     pool.getPrice(),
-                    0,
-                    pool.getTicketCount()));
+                    count,
+                    ticketCount));
         }
         return poolDetailsDTOS;
     }
-
     @Transactional
-    public void deletePool(String eventName,Long poolID){
-        Event event = getEvent(eventName);
+    public void deletePool(Long poolID){
         Pool pool = getPool(poolID);
-        poolRepo.deletePoolByEventAndPoolID(event,pool.getPoolID());
+        Integer i = ticketRepo.countTicketsByPoolPoolID(poolID);
+        if(i == null || i == 0) {
+            poolRepo.deletePoolByPoolID(pool.getPoolID());
+        }else{
+            throw new PoolException("Pool already in use");
+        }
     }
     @Transactional
     public void updatePool(poolDTO poolDTO){
         Pool pool = getPool(poolDTO.getPoolID());
+        if("DONE".equals(pool.getEvent().getEventStatus())){
+            throw new EventException("Event is already performed");
+        }
         pool.setPrice(poolDTO.getPrice());
         Integer ticketCount = pool.getTicketCount();
         ticketCount += poolDTO.getTicketCount();

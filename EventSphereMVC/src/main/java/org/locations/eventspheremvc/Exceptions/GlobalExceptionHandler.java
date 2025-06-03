@@ -26,10 +26,12 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     private categoryRequestService categoryService;
     private poolRequestService poolService;
+    private eventRequestService eventService;
 
-    public GlobalExceptionHandler(categoryRequestService categoryService, poolRequestService poolService) {
+    public GlobalExceptionHandler(categoryRequestService categoryService, poolRequestService poolService, eventRequestService eventService) {
         this.categoryService = categoryService;
         this.poolService = poolService;
+        this.eventService = eventService;
     }
 
     @ExceptionHandler(PasswordException.class)
@@ -91,6 +93,15 @@ public class GlobalExceptionHandler {
             model.addAttribute("name",poolDTO.getEventName());
             model.addAttribute("pools",pools);
             return "ticketView";
+        } else if (uri.equals("/image/update")) {
+            imageEventDTO iEvent = (imageEventDTO) e.getBindingResult().getTarget();
+            assert iEvent != null;
+            Map<String,String> errors = getStringStringMap(e);
+            eventDTO event = eventService.getEventDetails(iEvent.getEName());
+            model.addAttribute("event",event);
+            model.addAttribute("iEvent",iEvent);
+            model.addAttribute("errors",errors);
+            return "modifyEventView";
         }
         return "errorView";
     }

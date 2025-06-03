@@ -7,17 +7,17 @@ layout:decorate="~{panelView}">
 </head >
 <body>
 <div class="container mt-4" layout:fragment="content">
-    <h3 class="mb-4 text-center">Registered users</h3>
+    <h3 class="mb-4 text-center">Accounts</h3>
     <div class="border rounded p-2 overflow-auto ms-4 me-4 list-group p-4" style="max-height: 600px;">
         <div th:each="user : ${userList}" class="list-group-item mb-2 p-3 rounded d-flex justify-content-between align-items-center shadow-sm">
-            <span th:text="${user.USERNAME}" class="me-4"></span>
+            <span th:text="${user.username}" class="me-4"></span>
             <div class="btn-group" role="group">
-                <a th:href="@{/user(username=${user.USERNAME})}" class="btn btn-outline-dark btn ">View Details</a>
+                <a th:href="@{/user(username=${user.username})}" class="btn btn-outline-dark btn ">View Details</a>
                 <form th:action="@{/admin/block}" method="post">
-                    <input type="hidden" name="mail" th:value="${user.MAIL}" />
-                    <button type="submit" class="btn btn-outline-danger btn" th:text="${user.NON_LOCKED == true} ? 'Block' : 'Unblock'"></button>
+                    <input type="hidden" name="mail" th:value="${user.mail}" />
+                    <button type="submit" class="btn btn-outline-danger btn" th:text="${user.nonLocked == true} ? 'Block' : 'Unblock'"></button>
                 </form>
-                <a th:href="@{/admin/message(username=${user.USERNAME})}" type="submit" class="btn btn-outline-primary btn">Send Message</a>
+                <a th:href="@{/admin/message(username=${user.username})}" type="submit" class="btn btn-outline-primary btn">Send Message</a>
             </div>
         </div>
     </div>

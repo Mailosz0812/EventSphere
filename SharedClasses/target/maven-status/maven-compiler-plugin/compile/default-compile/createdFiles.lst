@@ -15,6 +15,8 @@ DTOs\messageDTO.class
 DTOs\userRegisterDTO$userRegisterDTOBuilder.class
 DTOs\PasswordTokenDTO.class
 DTOs\commentDTO.class
+DTOs\dailySalesDetails.class
 DTOs\eventDetailsDTO.class
 DTOs\poolDetailsDTO.class
+DTOs\ticketsStatsDTO.class
 DTOs\ticketPaymentDTO.class
