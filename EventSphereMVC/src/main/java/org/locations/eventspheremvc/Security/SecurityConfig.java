@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/sys").hasRole("SYS_ADMIN")
+                        .requestMatchers("/admin/sys","/admin/admins").hasRole("SYS_ADMIN")
                         .requestMatchers("/admin","/admin/**").hasAnyRole("ADMIN","SYS_ADMIN")
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/reset","/reset/**").permitAll()
@@ -38,6 +38,12 @@ public class SecurityConfig {
                         .requestMatchers("/organizer").hasRole("ORGANIZER")
                         .requestMatchers("/event").hasAnyRole("ORGANIZER","SYS_ADMIN","ADMIN")
                         .requestMatchers("/event/events").hasRole("ORGANIZER")
+                        .requestMatchers("/home","/home/**").hasRole("USER")
+                        .requestMatchers("/ticket/manage").hasRole("ORGANIZER")
+                        .requestMatchers("/ticket/**").hasRole("USER")
+                        .requestMatchers("/pool","pool/**").hasRole("ORGANIZER")
+                        .requestMatchers("/subscribe","/unsubscribe").hasRole("USER")
+                        .requestMatchers("/image/**").hasRole("ORGANIZER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

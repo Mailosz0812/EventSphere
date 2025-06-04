@@ -126,4 +126,9 @@ public class GlobalExceptionHandler {
         model.addAttribute("error",e.getMessage());
         return "errorView";
     }
+    @ExceptionHandler(Exception.class)
+    public String handleException(Exception e,Model model){
+        model.addAttribute("error",e.getMessage());
+        return "errorView";
+    }
 }

@@ -28,11 +28,9 @@ public class poolController {
     @PostMapping
     public String createPool(@ModelAttribute @Valid poolDTO poolDTO, Model model){
         List<poolDetailsDTO> pools = null;
-        System.out.println("cos");
         try{
             pools = poolService.getPools(poolDTO.getEventName());
         }catch (HttpClientErrorException e){
-            System.out.println(e.getResponseBodyAsString());
             model.addAttribute("response",e.getResponseBodyAsString());
             return "errorView";
         }

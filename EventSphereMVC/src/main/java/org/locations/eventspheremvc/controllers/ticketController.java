@@ -40,14 +40,24 @@ public class ticketController {
                                    @RequestParam(name = "editMode", required = false, defaultValue = "false") boolean editMode,
                                    @RequestParam(name = "poolID", required = false) Long poolID,
                                    Model model) {
-        List<poolDetailsDTO> pools = poolService.getPools(eName);
-        for (poolDetailsDTO pool : pools) {
-            System.out.println(pool.getPoolType());
+        List<poolDetailsDTO> pools = null;
+        try {
+             pools = poolService.getPools(eName);
+        }catch (HttpClientErrorException e){
+            model.addAttribute("error",e.getResponseBodyAsString());
+            return "errorView";
         }
         model.addAttribute("formAction", editMode ? "/pool/update" : "/pool");
         model.addAttribute("editMode", editMode);
         if (editMode) {
-            poolDTO pool = poolService.getPool(poolID);
+
+            poolDTO pool = null;
+            try{
+                pool = poolService.getPool(poolID);
+            }catch (HttpClientErrorException e){
+                model.addAttribute("error",e.getResponseBodyAsString());
+                return "errorView";
+            }
             model.addAttribute("poolDTO", pool);
         } else {
             model.addAttribute("poolDTO", new poolDTO());
@@ -157,7 +167,6 @@ public class ticketController {
         ticketDetailsDTO ticketDetails = null;
         byte[] qrCode = null;
         try{
-            System.out.println("przyszlo");
             ticketDetails = ticketService.getTicketDetailsById(ticketId);
             qrCode = QrCodeGenerator.generateQRCodeImage(ticketDetails);
         }catch (HttpClientErrorException e){
