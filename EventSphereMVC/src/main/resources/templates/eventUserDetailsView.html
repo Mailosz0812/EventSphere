@@ -83,7 +83,7 @@
                                             <input type="number"
                                                    class="form-control text-center"
                                                    th:field="*{tickets[__${poolStat.index}__].quantity}"
-                                                   value=0 min=0 th:max="${pool.ticketCount}">
+                                                   value=0 min=0 th:max="${pool.ticketCount}" aria-label="ticketsQuantity">
                                             <button type="button" class="btn btn-light" onclick="changeQuantity(this, 1)">+</button>
                                         </div>
                                         <small class="text-muted">Available: <span th:text="${pool.ticketCount}"></span></small>

@@ -20,7 +20,7 @@
     </style>
 </head>
 <body class="bg-light">
-<button class="btn btn-dark d-md-none m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+<button class="btn btn-dark d-md-none m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="menu button">
     <i class="bi bi-list fs-2"></i>
 </button>
 <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebar">
@@ -82,31 +82,31 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="organizersDropdown">
                     <i class="bi bi-people fs-5 me-2"></i>
                     Organizers
                 </a>
-                <ul class="dropdown-menu bg-dark " aria-labelledby="btnGroupDrop1">
+                <ul class="dropdown-menu bg-dark " aria-labelledby="organizersDropdown">
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/register/organizer}">Add Organizer</a></li>
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/organizers}">View organizers</a></li>
                 </ul>
             </li>
             <li>
-                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="usersDropdown">
                     <i class="bi bi-people fs-5 me-2"></i>
                     Users
                 </a>
-                <ul class="dropdown-menu bg-dark " aria-labelledby="btnGroupDrop1">
+                <ul class="dropdown-menu bg-dark " aria-labelledby="usersDropdown">
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/register/user}">Add User</a></li>
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/users}">View users</a></li>
                 </ul>
             </li>
             <li sec:authorize="hasRole('SYS_ADMIN')" class="nav-item me-3">
-                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="adminDropdown">
                     <i class="bi bi-people fs-5 me-2"></i>
                     Admin
                 </a>
-                <ul class="dropdown-menu bg-dark " aria-labelledby="btnGroupDrop1">
+                <ul class="dropdown-menu bg-dark " aria-labelledby="adminDropdown">
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/sys}">Add Admin</a></li>
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/admins}">View Admins</a></li>
                 </ul>
@@ -178,21 +178,21 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="organizerDropdown">
                     <i class="bi bi-people fs-5 me-2"></i>
                     Organizers
                 </a>
-                <ul class="dropdown-menu bg-dark " aria-labelledby="btnGroupDrop1">
+                <ul class="dropdown-menu bg-dark " aria-labelledby="organizerDropdown">
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/register/organizer}">Add Organizer</a></li>
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/organizers}">View organizers</a></li>
                 </ul>
             </li>
             <li>
-                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link text-white mb-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="userDropdown">
                     <i class="bi bi-people fs-5 me-2"></i>
                     Users
                 </a>
-                <ul class="dropdown-menu bg-dark " aria-labelledby="btnGroupDrop1">
+                <ul class="dropdown-menu bg-dark " aria-labelledby="userDropdown">
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/register/user}">Add User</a></li>
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/users}">View users</a></li>
                 </ul>
@@ -202,7 +202,7 @@
                     <i class="bi bi-people fs-5 me-2"></i>
                     Admin
                 </a>
-                <ul class="dropdown-menu bg-dark " aria-labelledby="btnGroupDrop1">
+                <ul class="dropdown-menu bg-dark " aria-labelledby="adminDropdown">
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/sys}">Add Admin</a></li>
                     <li><a class="dropdown-item text-white text-decoration-none mb-2" th:href="@{/admin/admins}">View Admins</a></li>
                 </ul>
