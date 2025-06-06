@@ -24,7 +24,6 @@ public class eventDTO {
     private LocalDate EVENTDATE;
     @NotEmpty(message = "Location must be provided")
     private String LOCATION;
-//    @Size(min = 100, message = "Try larger description")
     @Size(max = 1000, message = "Try shorter description")
     private String DESCRIPTION;
     @NotEmpty(message = "Category must be provided")

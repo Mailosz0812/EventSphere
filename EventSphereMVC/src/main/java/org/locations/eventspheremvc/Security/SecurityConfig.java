@@ -41,9 +41,10 @@ public class SecurityConfig {
                         .requestMatchers("/home","/home/**").hasRole("USER")
                         .requestMatchers("/ticket/manage").hasRole("ORGANIZER")
                         .requestMatchers("/ticket/**").hasRole("USER")
-                        .requestMatchers("/pool","pool/**").hasRole("ORGANIZER")
+                        .requestMatchers("/pool","/pool/**").hasRole("ORGANIZER")
                         .requestMatchers("/subscribe","/unsubscribe").hasRole("USER")
                         .requestMatchers("/image/**").hasRole("ORGANIZER")
+                        .requestMatchers("/user/update").hasAnyRole("USER","ORGANIZER","ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

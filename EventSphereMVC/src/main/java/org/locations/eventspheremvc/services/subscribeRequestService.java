@@ -2,6 +2,7 @@ package org.locations.eventspheremvc.services;
 
 import DTOs.eventDTO;
 import DTOs.subscribeDTO;
+import lombok.Setter;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -10,14 +11,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
-public class userRequestService {
-    private final RestTemplate restTemplate;
+public class subscribeRequestService {
+    private RestTemplate restTemplate;
     private final String url = "http://localhost:8080/eventSphereRest/subscribe";
 
-    public userRequestService(RestTemplate restTemplate) {
+    public subscribeRequestService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
     public int countSubscribedEvents(String mail){
         String apiUrl = url + "/count?mail={mail}";
         return restTemplate.getForObject(apiUrl, Integer.class,mail);

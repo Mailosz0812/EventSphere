@@ -112,12 +112,18 @@
                 </ul>
             </li>
         </ul>
-        <ul class = "nav nav-pills flex-column mt-auto fs-6">
+        <ul class = "nav nav-pills flex-column mt-auto" >
             <hr class="mt-auto">
             <form th:action="@{/logout}" method="post">
-                <i class="bi bi-box-arrow-left fs-5 me-2"></i>
-                <button type="submit" class="btn btn-dark mb-1">Logout</button>
+                <i class="bi bi-box-arrow-left fs-5"></i>
+                <button type="submit" class="btn btn-dark">Logout</button>
             </form>
+            <li sec:authorize="hasAnyRole('ADMIN','ORGANIZER','USER')">
+                <a th:href="@{/user/update}" class="nav-link text-white mb-1">
+                    <i class="bi bi-person-circle fs-5 me-2"></i>
+                    Edit Account
+                </a>
+            </li>
         </ul>
     </div>
 </div>
@@ -210,15 +216,23 @@
         </ul>
         <ul class = "nav nav-pills flex-column mt-auto fs-6">
             <hr class="mt-auto">
+            <li sec:authorize="hasAnyRole('ADMIN','ORGANIZER','USER')">
+                <a th:href="@{/user/update}" class="nav-link text-white mb-1">
+                    <i class="bi bi-person-circle fs-5 me-2"></i>
+                    Edit Account
+                </a>
+            </li>
+            <li>
             <form th:action="@{/logout}" method="post">
                 <i class="bi bi-box-arrow-left fs-5 me-2"></i>
                 <button type="submit" class="btn btn-dark mb-1">Logout</button>
             </form>
+            </li>
         </ul>
     </div>
     <div sec:authorize="hasAnyRole('SYS_ADMIN','ADMIN')" layout:fragment="content" class="container my-4">
         <div class="row gy-4">
-            <!-- Statystyki -->
+
             <div class="col-12 col-md-3 g-5">
                 <div class="card shadow mb-4">
                     <div class="card-body">
@@ -240,7 +254,6 @@
                 </div>
             </div>
 
-            <!-- Ostatnie eventy -->
             <div class="col-12 col-md-4">
                 <div class="card shadow">
                     <h2 class="card-title lead p-4 border-bottom" style="font-weight: 600">
@@ -266,7 +279,6 @@
                 </div>
             </div>
 
-            <!-- Ostatni użytkownicy -->
             <div class="col-12 col-md-5">
                 <div class="card shadow">
                     <h2 class="card-title lead p-4 border-bottom" style="font-weight: 600">

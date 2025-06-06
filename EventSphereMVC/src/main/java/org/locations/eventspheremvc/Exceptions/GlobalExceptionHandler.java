@@ -102,7 +102,14 @@ public class GlobalExceptionHandler {
             model.addAttribute("iEvent",iEvent);
             model.addAttribute("errors",errors);
             return "modifyEventView";
-        }
+        }else if(uri.equals("/user/update")) {
+            userDTO user = (userDTO) e.getBindingResult().getTarget();
+            assert user != null;
+            Map<String,String> errors = getStringStringMap(e);
+            model.addAttribute("user",user);
+            model.addAttribute("errors",errors);
+            return "userUpdateView";
+         }
         return "errorView";
     }
 
@@ -119,6 +126,7 @@ public class GlobalExceptionHandler {
         model.addAttribute("message",e.getTarget());
         model.addAttribute("error",e.getMessage());
         String url = request.getHeader("Referer");
+        System.out.println(url);
         return "redirect:"+url;
     }
     @ExceptionHandler(EventSphereMVCException.class)
@@ -128,6 +136,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e,Model model){
+        System.out.println(e.getMessage());
         model.addAttribute("error",e.getMessage());
         return "errorView";
     }

@@ -7,6 +7,7 @@ import org.locations.eventspheremvc.services.*;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,18 +28,18 @@ public class UserController {
     private final eventRequestService eventService;
     private final imageRequestService imageService;
     private final categoryRequestService categoryService;
-    private final userRequestService userService;
+    private final subscribeRequestService subscribeService;
     private final ticketRequestService ticketService;
 
     public UserController(accountsRequestService userRequestService, PasswordValidator passValid, eventRequestService eventService,
                           imageRequestService imageService, categoryRequestService categoryService,
-                          userRequestService userService, ticketRequestService ticketService) {
+                          subscribeRequestService subscribeService, ticketRequestService ticketService) {
         this.userRequestService = userRequestService;
         this.passValid = passValid;
         this.eventService = eventService;
         this.imageService = imageService;
         this.categoryService = categoryService;
-        this.userService = userService;
+        this.subscribeService = subscribeService;
         this.ticketService = ticketService;
     }
 
@@ -61,14 +63,43 @@ public class UserController {
         }
     }
     @GetMapping("/user")
-    public String userDetails(@RequestParam("username") String username,Model model){
+    public String userDetails(@RequestParam("username") String username, Model model){
         try {
             userDTO user = userRequestService.getUserByUsername(username);
             model.addAttribute("user", user);
             return "userDetailsView";
         }catch (HttpClientErrorException e){
+            model.addAttribute("error","Something went wrong");
             return "errorView";
         }
+    }
+    @GetMapping("/user/update")
+    public String updateUserView(Model model){
+        try {
+            String mail = authContextProvider.getMail();
+            userDTO user = userRequestService.findUserByMail(mail);
+            System.out.println(user.getMail());
+            model.addAttribute("user", user);
+            return "userUpdateView";
+        }catch (HttpClientErrorException e){
+            System.out.println("cos");
+            model.addAttribute("error","Something went wrong");
+            return "errorView";
+        }
+    }
+    @PostMapping("/user/update")
+    public String updateUser(@ModelAttribute userDTO user, Model model, RedirectAttributes attributes){
+        try{
+            System.out.println(user.getMail());
+            userRequestService.updateUserDetails(user);
+            attributes.addFlashAttribute("response","User updated successfully");
+            return "redirect:/user/update";
+        }catch (HttpClientErrorException e){
+            System.out.println(e.getResponseBodyAsString());
+            model.addAttribute("error","Something went wrong");
+            return "errorView";
+        }
+
     }
 
     @GetMapping("/")
@@ -90,7 +121,7 @@ public class UserController {
             try {
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 if(auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-                    boolean subState = userService.subscribeState(event.getNAME(), auth.getName());
+                    boolean subState = subscribeService.subscribeState(event.getNAME(), auth.getName());
                     subStateMap.put(event.getNAME(),subState);
                 }
                 imageEventDTO iEvent = imageService.getImageByEventName(event.getNAME());
@@ -128,9 +159,9 @@ public class UserController {
     @GetMapping("/home")
     public String userView(Model model){
         String mail = authContextProvider.getMail();
-        int countEvent = userService.countSubscribedEvents(mail);
-        List<eventDTO> eventsFeed = userService.subscribedEventsFeed(mail);
-        List<eventDTO> incomingEvents = userService.incomingEvents(mail);
+        int countEvent = subscribeService.countSubscribedEvents(mail);
+        List<eventDTO> eventsFeed = subscribeService.subscribedEventsFeed(mail);
+        List<eventDTO> incomingEvents = subscribeService.incomingEvents(mail);
         int countTickets = ticketService.countUserTickets(mail);
         model.addAttribute("countSub",countEvent);
         model.addAttribute("incomingEvents",incomingEvents);

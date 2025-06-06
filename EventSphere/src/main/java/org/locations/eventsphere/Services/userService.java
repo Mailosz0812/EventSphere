@@ -60,10 +60,7 @@ public class userService {
     }
 
     public userDTO updateUser(userDTO userDTO){
-        Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMail(userDTO.getMail());
-        if(loggedUserOptional.isEmpty()){
-            throw new NoSuchUserException("User not found");
-        }
+        Optional<LoggedUser> loggedUserOptional = getLoggedUser(userRepo.findLoggedUserByMail(userDTO.getMail()));
         LoggedUser updateUser = loggedUserOptional.get();
         updateUser.setName(userDTO.getName());
         updateUser.setSurname(userDTO.getSurname());
@@ -71,10 +68,7 @@ public class userService {
         return userMapper.mapTo(userRepo.save(updateUser));
     }
     public userRegisterDTO updateUserRegister(userRegisterDTO userDTO){
-        Optional<LoggedUser> loggedUserOptional = userRepo.findLoggedUserByMail(userDTO.getMail());
-        if(loggedUserOptional.isEmpty()){
-            throw new NoSuchUserException("User not found");
-        }
+        Optional<LoggedUser> loggedUserOptional = getLoggedUser(userRepo.findLoggedUserByMail(userDTO.getMail()));
         LoggedUser updateUser = loggedUserOptional.get();
         updateUser.setName(userDTO.getName());
         updateUser.setSurname(userDTO.getSurname());
@@ -86,24 +80,19 @@ public class userService {
     }
 
     public userRegisterDTO getUserByMail(String mail){
-        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMail(mail);
-        if(optionalLoggedUser.isEmpty()){
-            throw new NoSuchUserException("User not found");
-        }
+        Optional<LoggedUser> optionalLoggedUser = getLoggedUser(userRepo.findLoggedUserByMail(mail));
         return userRegisterMapper.mapTo(optionalLoggedUser.get());
     }
     public userDTO getUserByUsername(String username){
-        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByUsername(username);
-        if(optionalLoggedUser.isEmpty()){
-            throw new NoSuchUserException("User not found");
-        }
+        Optional<LoggedUser> optionalLoggedUser = getLoggedUser(userRepo.findLoggedUserByUsername(username));
+        return userMapper.mapTo(optionalLoggedUser.get());
+    }
+    public userDTO getUserDetailsByMail(String mail){
+        Optional<LoggedUser> optionalLoggedUser = getLoggedUser(userRepo.findLoggedUserByMail(mail));
         return userMapper.mapTo(optionalLoggedUser.get());
     }
     public userDTO setBlockUser(String mail){
-        Optional<LoggedUser> optionalLoggedUser = userRepo.findLoggedUserByMail(mail);
-        if(optionalLoggedUser.isEmpty()){
-            throw new NoSuchUserException("User not found");
-        }
+        Optional<LoggedUser> optionalLoggedUser = getLoggedUser(userRepo.findLoggedUserByMail(mail));
         LoggedUser loggedUser = optionalLoggedUser.get();
         boolean isLocked = loggedUser.isNonLocked();
         loggedUser.setNonLocked(!isLocked);
@@ -119,5 +108,13 @@ public class userService {
     public String usersCount(String role){
         Role eRole = checkRole(role);
         return String.valueOf(userRepo.countLoggedUserByRole(eRole));
+    }
+
+    private Optional<LoggedUser> getLoggedUser(Optional<LoggedUser> userRepo) {
+        Optional<LoggedUser> optionalLoggedUser = userRepo;
+        if (optionalLoggedUser.isEmpty()) {
+            throw new NoSuchUserException("User not found");
+        }
+        return optionalLoggedUser;
     }
 }

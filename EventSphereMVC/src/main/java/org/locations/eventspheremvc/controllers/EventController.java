@@ -15,13 +15,13 @@ import java.util.List;
 public class EventController {
     private final eventRequestService eventService;
     private final imageRequestService imageService;
-    private final userRequestService userService;
+    private final subscribeRequestService subscribeService;
     private final poolRequestService poolService;
 
-    public EventController(eventRequestService eventService, imageRequestService imageService, userRequestService userService, poolRequestService poolService) {
+    public EventController(eventRequestService eventService, imageRequestService imageService, subscribeRequestService userService, poolRequestService poolService) {
         this.eventService = eventService;
         this.imageService = imageService;
-        this.userService = userService;
+        this.subscribeService = userService;
         this.poolService = poolService;
     }
 
@@ -45,7 +45,7 @@ public class EventController {
         List<poolDetailsDTO> pools = null;
         try{
             pools = poolService.getPools(event.getNAME());
-            subState = userService.subscribeState(event.getNAME(), authContextProvider.getMail());
+            subState = subscribeService.subscribeState(event.getNAME(), authContextProvider.getMail());
             altText = imageService.getImageByEventName(eName).getAltText();
         }catch (HttpClientErrorException e){
         }

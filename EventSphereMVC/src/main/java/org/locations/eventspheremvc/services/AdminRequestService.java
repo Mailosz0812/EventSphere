@@ -19,6 +19,7 @@ public class AdminRequestService {
         this.restTemplate = restTemplate;
     }
     public String adminCreateUser(preCreatedUserDTO userDTO, String role){
+        System.out.println("adminCreateUser");
         userRegisterDTO user = userRegisterDTO.builder()
                 .role(role)
                 .name("_")

@@ -93,7 +93,7 @@ public class AdminController {
         model.addAttribute("organizer",new preCreatedUserDTO());
         return "organizerRegister";
     }
-    @PostMapping("register/organizer")
+    @PostMapping("/register/organizer")
     public String registerOrganizer(@ModelAttribute preCreatedUserDTO organizer, Model model){
         try {
             adminService.adminCreateUser(organizer, "ORGANIZER");
@@ -116,6 +116,7 @@ public class AdminController {
     @PostMapping("/register/user")
     public String registerUser(@ModelAttribute preCreatedUserDTO userDTO,Model model){
         try{
+            System.out.println("end point");
             adminService.adminCreateUser(userDTO,"USER");
             String token = generateToken(userDTO);
             emailService.sendPasswordLink(userDTO.getMail(),token);

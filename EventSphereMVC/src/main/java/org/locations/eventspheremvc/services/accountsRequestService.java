@@ -19,7 +19,7 @@ public class accountsRequestService {
     }
 
     public userRegisterDTO getUserByMail(String mail){
-        String url = userApiURL+"/getUser/mail?mail={mail}";
+        String url = userApiURL+"/{mail}";
         return restTemplate.getForObject(url, userRegisterDTO.class,mail);
     }
     public String createUser(userRegisterDTO userRegisterDTO,String role){
@@ -31,13 +31,27 @@ public class accountsRequestService {
         HttpEntity<userRegisterDTO> request = new HttpEntity<>(userRegisterDTO,headers);
         return restTemplate.postForObject(userApiURL,request,String.class);
     }
-    public String updateUser(userRegisterDTO user){
+    public void updateUser(userRegisterDTO user){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<userRegisterDTO> request = new HttpEntity<>(user,headers);
-        return restTemplate.exchange(userApiURL+"/registry", HttpMethod.PUT,request,String.class).getBody();
+        restTemplate.exchange(userApiURL+"/registry", HttpMethod.PUT,request,String.class).getBody();
+    }
+    public void updateUserDetails(userDTO user){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<userDTO> request = new HttpEntity<>(user);
+        restTemplate.exchange(userApiURL,
+                HttpMethod.PUT,
+                request,
+                userDTO.class);
     }
     public userDTO getUserByUsername(String username){
-        return restTemplate.getForObject(userApiURL+"/getUser/username?username={username}",userDTO.class,username);
+        return restTemplate.getForObject(userApiURL+"/login/{username}",userDTO.class,username);
+    }
+    public userDTO findUserByMail(String mail){
+        return restTemplate.getForObject(userApiURL + "/details/{mail}"
+        , userDTO.class
+        ,mail);
     }
 }

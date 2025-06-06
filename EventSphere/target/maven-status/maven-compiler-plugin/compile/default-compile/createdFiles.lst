@@ -19,6 +19,7 @@ org\locations\eventsphere\Exceptions\EventImageException.class
 org\locations\eventsphere\Exceptions\UserException.class
 org\locations\eventsphere\mappers\impl\userMapper.class
 org\locations\eventsphere\Repositories\imageRepository.class
+org\locations\eventsphere\Services\EventStatusUpdater.class
 org\locations\eventsphere\Services\passwordResetService.class
 org\locations\eventsphere\Exceptions\PoolException.class
 org\locations\eventsphere\mappers\impl\categoryMapper.class

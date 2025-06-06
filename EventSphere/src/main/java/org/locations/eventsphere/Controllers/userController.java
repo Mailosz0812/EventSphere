@@ -28,8 +28,8 @@ public class userController {
         return userService.updateUser(userDTO);
     }
 
-    @GetMapping("/getUser/mail")
-    public userRegisterDTO getUserByMail(@RequestParam("mail") String mail){
+    @GetMapping("/{mail}")
+    public userRegisterDTO getUserByMail(@PathVariable("mail") String mail){
         return userService.getUserByMail(mail);
     }
     @PutMapping("/registry")
@@ -40,9 +40,13 @@ public class userController {
     public userDTO blockUser(@RequestBody String mail){
         return userService.setBlockUser(mail);
     }
-    @GetMapping("/getUser/username")
-    public userDTO getUserByUsername(@RequestParam("username") String username){
+    @GetMapping("/login/{username}")
+    public userDTO getUserByUsername(@PathVariable("username") String username){
         return userService.getUserByUsername(username);
+    }
+    @GetMapping("/details/{mail}")
+    public userDTO getUserDetailsByMail(@PathVariable("mail") String mail){
+        return userService.getUserDetailsByMail(mail);
     }
     @GetMapping("/getUsers/week")
     public List<userDTO> getUsersOfWeek(){

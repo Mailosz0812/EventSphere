@@ -14,13 +14,14 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private String link = "localhost:8081/reset?token=";
     private JavaMailSender javaMailSender;
-    private final String mail = "eventSphere@wp.pl";
+    private final String mail = "eventsphere@wp.pl";
 
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
     public void sendPasswordLink(String toEmail,String token){
+        System.out.println("pass generation");
         String subject = "Update account information";
         String htmlContent = "<p>Use this link to update account information:</p>" +
                 "<a href=\"" + link + token + "\">Update Password</a> "
@@ -34,6 +35,7 @@ public class EmailService {
             helper.setFrom(mail);
             javaMailSender.send(message);
         }catch (MessagingException e){
+            System.out.println("cos");
             throw new EmailException("Email sending failure",new messageDTO(mail,subject,htmlContent));
         }
     }
