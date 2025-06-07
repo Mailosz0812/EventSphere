@@ -1,8 +1,10 @@
 package org.locations.eventsphere.Controllers;
+import DTOs.preCreatedUserDTO;
 import DTOs.userDTO;
 import DTOs.userRegisterDTO;
 import jakarta.validation.Valid;
 
+import org.locations.eventsphere.Services.eventService;
 import org.locations.eventsphere.Services.userService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +12,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class userController {
-    private userService userService;
-    public userController(org.locations.eventsphere.Services.userService userService) {
+    private final userService userService;
+    private final eventService eventService;
+
+    public userController(org.locations.eventsphere.Services.eventService eventService, org.locations.eventsphere.Services.userService userService) {
+        this.eventService = eventService;
         this.userService = userService;
     }
+
     @PostMapping()
     public ResponseEntity<String> createUser(@RequestBody userRegisterDTO userDTO){
         userService.createUser(userDTO);
@@ -55,5 +61,10 @@ public class userController {
     @GetMapping("/getUsers/count")
     public String usersCount(@RequestParam("role") String role){
         return userService.usersCount(role);
+    }
+    @GetMapping("/organizer/{eventName}")
+    public preCreatedUserDTO getOrganizerByEventName(@PathVariable("eventName") String eventName){
+        System.out.println(eventName);
+        return eventService.getOrganizerByEvent(eventName);
     }
 }

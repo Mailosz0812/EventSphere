@@ -2,6 +2,7 @@ package org.locations.eventspheremvc.controllers;
 
 import DTOs.*;
 import org.locations.eventspheremvc.services.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +18,15 @@ public class EventController {
     private final imageRequestService imageService;
     private final subscribeRequestService subscribeService;
     private final poolRequestService poolService;
+    private final accountsRequestService accountService;
 
-    public EventController(eventRequestService eventService, imageRequestService imageService, subscribeRequestService userService, poolRequestService poolService) {
+    public EventController(eventRequestService eventService, imageRequestService imageService, subscribeRequestService subscribeService,
+                           poolRequestService poolService, accountsRequestService accountService) {
         this.eventService = eventService;
         this.imageService = imageService;
-        this.subscribeService = userService;
+        this.subscribeService = subscribeService;
         this.poolService = poolService;
+        this.accountService = accountService;
     }
 
     @GetMapping("/events")
@@ -43,17 +47,28 @@ public class EventController {
         String altText = null;
         boolean subState = false;
         List<poolDetailsDTO> pools = null;
+        preCreatedUserDTO organizer = null;
         try{
             pools = poolService.getPools(event.getNAME());
-            subState = subscribeService.subscribeState(event.getNAME(), authContextProvider.getMail());
+            organizer = accountService.getOrganizerByEvent(eName);
+            if(SecurityContextHolder.getContext().getAuthentication() != null) {
+                subState = subscribeService.subscribeState(event.getNAME(), authContextProvider.getMail());
+            }
             altText = imageService.getImageByEventName(eName).getAltText();
         }catch (HttpClientErrorException e){
+            altText = "Sorry, organizer has not provide any image yet.";
         }
         model.addAttribute("purchaseRequestDTO",new purchaseRequestDTO());
         model.addAttribute("event",event);
         model.addAttribute("altText",altText);
         model.addAttribute("subState",subState);
         model.addAttribute("pools",pools);
+        if(organizer != null) {
+            System.out.println(organizer.getMail() + " " + organizer.getUsername());
+        }else{
+            System.out.println("jest nullem");
+        }
+        model.addAttribute("organizer",organizer);
         return "eventUserDetailsView";
     }
 }

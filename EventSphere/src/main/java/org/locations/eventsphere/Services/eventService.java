@@ -1,5 +1,6 @@
 package org.locations.eventsphere.Services;
 import DTOs.eventDTO;
+import DTOs.preCreatedUserDTO;
 import org.locations.eventsphere.Entities.*;
 import org.locations.eventsphere.Exceptions.EventAlreadyExistsException;
 import org.locations.eventsphere.Exceptions.NoSuchCategoryException;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -60,7 +62,7 @@ public class eventService {
     }
 
     public eventDTO updateEvent(eventDTO eventDTO){
-        Event updateEvent = checkEvent(eventDTO);
+        Event updateEvent = checkEvent(eventDTO.getNAME());
         updateEvent.setDescription(eventDTO.getDESCRIPTION());
         updateEvent.setEventDate(eventDTO.getEVENTDATE());
         updateEvent.setLocation(eventDTO.getLOCATION());
@@ -103,8 +105,25 @@ public class eventService {
     public List<eventDTO> getEventsByName(String name){
         return eventMapper.mapToList(eventRepo.findEventsByNameContainsIgnoreCaseAndEventStatus(name,"ACTIVE"));
     }
-    private Event checkEvent(eventDTO eventDTO) {
-        Optional<Event> eventOptional = eventRepo.findEventByNameAndEventStatus(eventDTO.getNAME(),"ACTIVE");
+    public preCreatedUserDTO getOrganizerByEvent(String eventName){
+        checkEvent(eventName);
+        Optional<LoggedUser> organizer = userRepo.findOrganizerByEvent(eventName);
+        return getPreCreatedUserDTO(organizer);
+    }
+
+    private preCreatedUserDTO getPreCreatedUserDTO(Optional<LoggedUser> organizer) {
+        preCreatedUserDTO organizerDTO = new preCreatedUserDTO();
+        if(organizer.isPresent()){
+            LoggedUser user = organizer.get();
+            System.out.println(user.getMail() + " " + user.getUsername());
+            organizerDTO.setMail(user.getMail());
+            organizerDTO.setUsername(user.getUsername());
+        }
+        return organizerDTO;
+    }
+
+    private Event checkEvent(String eventName) {
+        Optional<Event> eventOptional = eventRepo.findEventByNameAndEventStatus(eventName,"ACTIVE");
         if (eventOptional.isEmpty()) {
             throw new NoSuchEventException("Event not found");
         }

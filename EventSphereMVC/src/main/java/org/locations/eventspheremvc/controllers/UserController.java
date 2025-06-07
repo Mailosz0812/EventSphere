@@ -42,7 +42,6 @@ public class UserController {
         this.subscribeService = subscribeService;
         this.ticketService = ticketService;
     }
-
     @GetMapping("/register")
     public String register(Model model){
         userRegisterDTO registerDTO = new userRegisterDTO();

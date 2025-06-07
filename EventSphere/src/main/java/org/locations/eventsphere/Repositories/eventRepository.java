@@ -24,5 +24,4 @@ public interface eventRepository extends JpaRepository<Event,Long> {
     List<Event> findEventsByNameContainsIgnoreCaseAndEventStatus(String name,String status);
     List<Event> findAllByEventDateBefore(LocalDate time);
 
-
 }

@@ -37,28 +37,37 @@
 <div class="container mt-5" layout:fragment="content">
     <h3 class="text-center mb-5" th:text="${event.NAME}"></h3>
 
-    <div class="row ">
-        <div class="col-md-6 text-center mb-4 mb-md-0">
+    <div class="row g-5">
+        <!-- Obrazek wydarzenia -->
+        <div class="col-md-6 text-center">
             <img th:src="@{/image(eName=${event.NAME})}" class="img-fluid rounded shadow" style="max-height: 30rem;" th:alt="${altText}">
         </div>
+
+        <!-- Szczegóły wydarzenia -->
         <div class="col-md-6">
-            <p class="text-justify" th:text="${event.DESCRIPTION}"></p>
-            <p th:text="${event.LOCATION}"></p>
-            <p th:text="${event.EVENTDATE}"></p>
-            <div class="mt-4">
-                <form th:if="${subState} == false" sec:authorize="hasRole('USER')" th:action="@{/subscribe(name=${event.NAME})}" method="post">
-                    <button  type="submit" class="btn btn-dark" >Subscribe</button>
+            <div class="bg-light rounded p-4 shadow-sm mb-4 border">
+                <h4 class="mb-3"><i class="bi bi-info-circle me-2 text-primary"></i> Szczegóły wydarzenia</h4>
+                <p class="text-justify" th:text="${event.DESCRIPTION}"></p>
+                <p><i class="bi bi-geo-alt-fill me-2 text-danger"></i><strong> Lokalizacja:</strong> <span th:text="${event.LOCATION}"></span></p>
+                <p><i class="bi bi-calendar-event-fill me-2 text-success"></i><strong> Data:</strong> <span th:text="${event.EVENTDATE}"></span></p>
+            </div>
+
+            <!-- Subskrypcje -->
+            <div class="mb-4" th:if="${subState != null}">
+                <form th:if="${subState} == false " sec:authorize="hasRole('USER')" th:action="@{/subscribe(name=${event.NAME})}" method="post">
+                    <button type="submit" class="btn btn-dark w-100"><i class="bi bi-bell-plus me-2"></i>Subskrybuj</button>
                 </form>
                 <form th:if="${subState} == true" sec:authorize="hasRole('USER')" th:action="@{/unsubscribe(name=${event.NAME})}" method="post">
-                    <button type="submit" class="btn btn-dark">Unsubscribe</button>
+                    <button type="submit" class="btn btn-outline-dark w-100"><i class="bi bi-bell-slash me-2"></i>Usuń subskrypcję</button>
                 </form>
-                <div class="mt-4">
-                    <div th:if="${pools.isEmpty()}" sec:authorize="hasRole('USER')" class="alert alert-secondary text-center" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        All tickets for this event are sold out!
-                    </div>
-                    <form sec:authorize="hasRole('USER')" method="post" th:action="@{/ticket/buy}" th:object="${purchaseRequestDTO}">
-                        <input type="hidden" th:name="eventName" th:value="${event.NAME}"/>
+            </div>
+            <div>
+                <div th:if="${pools.isEmpty()}" sec:authorize="hasRole('USER')" class="alert alert-secondary text-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Wszystkie bilety na to wydarzenie zostały wyprzedane!
+                </div>
+
+                <form sec:authorize="hasRole('USER')" method="post" th:action="@{/ticket/buy}" th:object="${purchaseRequestDTO}">
+                    <input type="hidden" th:name="eventName" th:value="${event.NAME}"/>
                     <div class="accordion" id="ticketAccordion">
                         <div class="accordion-item" th:each="pool, poolStat : ${pools}">
                             <h2 class="accordion-header" th:id="'heading' + ${pool.poolID}">
@@ -74,34 +83,53 @@
                                  data-bs-parent="#ticketAccordion"
                                  th:attr="aria-labelledby='heading' + ${pool.poolID}">
                                 <div class="accordion-body">
-                                    <div th:if="${pool.ticketCount} > 0" class="d-flex align-items-center gap-3">
+                                    <div th:if="${pool.ticketCount} > 0" class="d-flex align-items-center gap-3 flex-wrap">
                                         <input type="hidden" th:name="'tickets[' + ${poolStat.index} + '].poolID'" th:value="${pool.poolID}" />
                                         <input type="hidden" th:name="'tickets[' + ${poolStat.index} + '].price'" th:value="${pool.price}" />
-                                        <p th:text="${event.NAME}"></p>
                                         <div class="input-group" style="width: 9rem">
                                             <button type="button" class="btn btn-light" onclick="changeQuantity(this, -1)">−</button>
                                             <input type="number"
                                                    class="form-control text-center"
                                                    th:field="*{tickets[__${poolStat.index}__].quantity}"
-                                                   value=0 min=0 th:max="${pool.ticketCount}">
+                                                   value="0" min="0" th:max="${pool.ticketCount}" aria-label="ticketsQuantity">
                                             <button type="button" class="btn btn-light" onclick="changeQuantity(this, 1)">+</button>
                                         </div>
-                                        <small class="text-muted">Available: <span th:text="${pool.ticketCount}"></span></small>
+                                        <small class="text-muted">Dostępne: <span th:text="${pool.ticketCount}"></span></small>
                                     </div>
-                                    <div th:if="${pool.ticketCount} <= 0" class="alert alert-info d-flex align-items-center">
-                                        <p>Tickets from this pool already sold</p>
+                                    <div th:if="${pool.ticketCount} <= 0" class="alert alert-info mt-3">
+                                        Bilety z tej puli zostały wyprzedane.
                                     </div>
                                 </div>
                             </div>
                             <p th:if="${response}" th:text="${response}" class="alert alert-info"></p>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success mt-4 w-100">Buy Selected Tickets</button>
-                    </form>
-                </div>
+                    <button th:if="${!pools.isEmpty()}" type="submit" class="btn btn-success mt-4 w-100">
+                        <i class="bi bi-cart-plus me-2"></i> Kup wybrane bilety
+                    </button>
+                </form>
             </div>
+
+
+        </div>
+        <!-- Organizator -->
+        <div class="m-5 p-4 bg-light rounded shadow-sm border">
+            <h5 class="mb-4 d-flex align-items-center">
+                <i class="bi bi-person-circle me-2 fs-4 text-primary"></i> Organizator wydarzenia
+            </h5>
+            <ul class="list-unstyled mb-0">
+                <li class="mb-2 d-flex align-items-center">
+                    <i class="bi bi-building me-2 text-secondary"></i>
+                    <strong>Nazwa:</strong> <span class="ms-1" th:text="${organizer.username}"></span>
+                </li>
+                <li class="mb-2 d-flex align-items-center">
+                    <i class="bi bi-envelope-at me-2 text-secondary"></i>
+                    <strong>Kontakt:</strong> <span class="ms-1" th:text="${organizer.mail}"></span>
+                </li>
+            </ul>
         </div>
     </div>
+
 </div>
 </body>
 </html>

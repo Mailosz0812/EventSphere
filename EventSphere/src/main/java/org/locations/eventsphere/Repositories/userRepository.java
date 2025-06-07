@@ -20,4 +20,7 @@ public interface userRepository extends JpaRepository<LoggedUser,Long> {
     @Query("SELECT lu FROM LoggedUser lu WHERE lu.userTimestamp > :timestamp")
     List<LoggedUser> findLoggedUsersByUserTimestamp(@Param("timestamp") LocalDateTime timestamp);
     int countLoggedUserByRole(Role role);
+
+    @Query("SELECT eo.organizer FROM EventOrganize eo JOIN eo.event e WHERE e.name=:event ")
+    Optional<LoggedUser> findOrganizerByEvent(@Param("event") String event);
 }
