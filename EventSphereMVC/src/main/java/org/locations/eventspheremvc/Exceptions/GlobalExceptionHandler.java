@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
             Map<String, String> errors = getStringStringMap(e);
             model.addAttribute("errors", errors);
             return "sendMessageView";
-        } else if (uri.equals("/event")) {
+        } else if (uri.equals("/organizer")) {
             eventDTO event = (eventDTO) e.getBindingResult().getTarget();
             Map<String,String> errors = new HashMap<>();
             List<categoryDTO> categories = categoryService.getCategories();
